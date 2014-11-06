@@ -762,6 +762,7 @@
 				INFOPLIST_FILE = "e-Hentai/e-Hentai-Info.plist";
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "e-Hentai";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -781,6 +782,7 @@
 				INFOPLIST_FILE = "e-Hentai/e-Hentai-Info.plist";
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "e-Hentai";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
