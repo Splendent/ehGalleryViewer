@@ -7,10 +7,17 @@
 //
 
 #import "SPEntryCollectionViewController.h"
+//HentaiCore
+#import "HentaiSearchFilter.h"
+#import "HentaiFilterView.h"
+
+#import "UIImageView+WebCache.h"
+
 NSInteger const kSPEntryCollectionViewCellImageTag = 100;
 NSInteger const kSPEntryCollectionViewCellLabelTag = 200;
 @interface SPEntryCollectionViewController ()
-
+@property (nonatomic, assign) NSUInteger webPageIndex;
+@property (nonatomic, strong) NSMutableArray * galleries;
 @end
 
 @implementation SPEntryCollectionViewController
@@ -19,11 +26,19 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.galleries = [NSMutableArray array];
+    self.webPageIndex = 0;
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Do any additional setup after loading the view.
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [HentaiParser requestListAtIndex:self.webPageIndex completion: ^(HentaiParserStatus status, NSArray *listArray) {
+        [self.galleries addObjectsFromArray:listArray];
+        [self.collectionView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -49,16 +64,30 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 10;
+    return [self.galleries count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.backgroundColor = [UIColor greenColor];
-    UIImage * image = (UIImage *)[cell viewWithTag:kSPEntryCollectionViewCellImageTag];
+    UIImageView * imageView = (UIImageView *)[cell viewWithTag:kSPEntryCollectionViewCellImageTag];
     UILabel * label = (UILabel *)[cell viewWithTag:kSPEntryCollectionViewCellLabelTag];
-    label.text = [indexPath description];
     // Configure the cell
+    NSDictionary *hentaiInfo = self.galleries[indexPath.row];
+    label.text = hentaiInfo[@"title"];
+    
+    
+    NSString *imgUrl = @"http://i.imgur.com/1gzbPf1.jpg"; //貓貓圖(公司用)
+    
+    imgUrl = hentaiInfo[@"thumb"]; //(真的H縮圖)
+    
+    [imageView sd_setImageWithURL:[NSURL URLWithString:imgUrl]
+                 placeholderImage:nil
+                          options:SDWebImageRefreshCached];
+    
+//    [self.cellCategory setCategoryStr:dataDict[@"category"]];
+//    [self.cellStar setStar:dataDict[@"rating"]];
+    
     
     return cell;
 }
