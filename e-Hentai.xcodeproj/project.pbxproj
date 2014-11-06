@@ -380,9 +380,7 @@
 		0199268E19ADDB83009F814B /* e-Hentai */ = {
 			isa = PBXGroup;
 			children = (
-				0137F40919C1684500528359 /* HentaiDownloadCenter */,
-				0150033319B6E5E90055F47D /* HentaiParser */,
-				9F9C3B5219D82DBA007CFF81 /* HentaiSearchFilter */,
+				6231865E1A0BBE430018E3CB /* HentaiCore */,
 				0150033619B6E5E90055F47D /* ThirdParty */,
 				0118080519B6F06200FE0DA1 /* Common */,
 				0199269719ADDB83009F814B /* AppDelegate.h */,
@@ -477,6 +475,16 @@
 				04376E0219B96BAE001B1599 /* RatingStar.m */,
 			);
 			path = GalleryCell;
+			sourceTree = "<group>";
+		};
+		6231865E1A0BBE430018E3CB /* HentaiCore */ = {
+			isa = PBXGroup;
+			children = (
+				0137F40919C1684500528359 /* HentaiDownloadCenter */,
+				0150033319B6E5E90055F47D /* HentaiParser */,
+				9F9C3B5219D82DBA007CFF81 /* HentaiSearchFilter */,
+			);
+			name = HentaiCore;
 			sourceTree = "<group>";
 		};
 		9F9C3B5219D82DBA007CFF81 /* HentaiSearchFilter */ = {
