@@ -40,7 +40,7 @@
 	//無限滾
 	if (indexPath.row >= [self.listArray count] - 15 && [self.listArray count] == (self.listIndex + 1) * 25) {
 		self.listIndex++;
-		NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%d", self.listIndex];
+		NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)self.listIndex];
 		NSString *filterString = [HentaiSearchFilter searchFilterUrlByKeyword:searchWord filterArray:[filterView filterResult] baseUrl:baseUrlString];
         
 		[HentaiParser requestListAtFilterUrl:filterString completion: ^(HentaiParserStatus status, NSArray *listArray) {
@@ -241,7 +241,7 @@
 	self.listIndex = 0;
 	__weak MainViewController *weakSelf = self;
     
-	NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%d", self.listIndex];
+	NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)self.listIndex];
 	NSString *filterString = [HentaiSearchFilter searchFilterUrlByKeyword:searchWord filterArray:[filterView filterResult] baseUrl:baseUrlString];
     
 	[HentaiParser requestListAtFilterUrl:filterString completion: ^(HentaiParserStatus status, NSArray *listArray) {
