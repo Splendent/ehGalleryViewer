@@ -58,20 +58,10 @@ static NSString * const reuseIdentifier = @"genericCell";
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     APhotoPageViewController * photoVC = segue.destinationViewController;
-    
-//    // kick things off by making the first page
-//    PhotoViewController *pageZero = [PhotoViewController photoViewControllerForPageIndex:0];
-//    if (pageZero != nil)
-//    {
-//        // assign the first page to the pageViewController (our rootViewController)
-//        UIPageViewController *pageViewController = (UIPageViewController *)self.window.rootViewController;
-//        pageViewController.dataSource = self;
-//        
-//        [pageViewController setViewControllers:@[pageZero]
-//                                     direction:UIPageViewControllerNavigationDirectionForward
-//                                      animated:NO
-//                                    completion:NULL];
-//    }
+    UICollectionViewCell * cell = sender;
+    NSIndexPath * indexPath = [self.collectionView indexPathForCell:cell];
+    photoVC.galleryInfo = self.galleries[indexPath.row];
+    [super prepareForSegue:segue sender:sender];
 }
 
 #pragma mark <UICollectionViewDataSource>

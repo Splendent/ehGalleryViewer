@@ -58,7 +58,8 @@
 
 + (APhotoViewController *)photoViewControllerForPageIndex:(NSUInteger)pageIndex
 {
-    if (pageIndex < [AImageScrollView imageCount])
+#warning there should check gallery image count
+    if (pageIndex)
     {
         return [[self alloc] initWithPageIndex:pageIndex];
     }

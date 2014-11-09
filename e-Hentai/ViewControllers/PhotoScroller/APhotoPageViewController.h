@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface APhotoPageViewController : UIPageViewController <UIPageViewControllerDataSource>
-
+@interface APhotoPageViewController : UIPageViewController <UIPageViewControllerDataSource, HentaiDownloadImageOperationDelegate>
+@property (nonatomic, strong) NSDictionary *galleryInfo;
 @end
