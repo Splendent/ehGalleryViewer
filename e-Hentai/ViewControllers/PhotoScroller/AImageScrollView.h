@@ -50,7 +50,6 @@
 @interface AImageScrollView : UIScrollView
 
 @property (nonatomic) NSUInteger index;
-
-+ (NSUInteger)imageCount;
+@property (nonatomic, strong) NSMutableArray * images;
 
 @end
