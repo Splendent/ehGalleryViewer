@@ -16,8 +16,9 @@
 NSInteger const kSPEntryCollectionViewCellImageTag = 100;
 NSInteger const kSPEntryCollectionViewCellLabelTag = 200;
 @interface SPEntryCollectionViewController ()
-@property (nonatomic, assign) NSUInteger webPageIndex;
+@property (nonatomic, assign) NSInteger webPageIndex;
 @property (nonatomic, strong) NSMutableArray * galleries;
+@property (nonatomic, assign) BOOL isHentaiParserLoading;
 @end
 
 @implementation SPEntryCollectionViewController
@@ -26,14 +27,16 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.galleries = [NSMutableArray array];
-    self.webPageIndex = 0;
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Do any additional setup after loading the view.
 }
 - (void)viewWillAppear:(BOOL)animated {
+    self.galleries = [NSMutableArray array];
+    self.webPageIndex = 0;
+    self.isHentaiParserLoading = NO;
+    
     [super viewWillAppear:animated];
     [HentaiParser requestListAtIndex:self.webPageIndex completion: ^(HentaiParserStatus status, NSArray *listArray) {
         [self.galleries addObjectsFromArray:listArray];
@@ -55,7 +58,6 @@ static NSString * const reuseIdentifier = @"genericCell";
     // Pass the selected object to the new view controller.
 }
 */
-
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -68,6 +70,10 @@ static NSString * const reuseIdentifier = @"genericCell";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row + 5 > [self.galleries count] && self.isHentaiParserLoading == NO){
+        [self loadGalleryAtIndex:indexPath.row];
+    }
+    
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.backgroundColor = [UIColor greenColor];
     UIImageView * imageView = (UIImageView *)[cell viewWithTag:kSPEntryCollectionViewCellImageTag];
@@ -87,8 +93,7 @@ static NSString * const reuseIdentifier = @"genericCell";
     
 //    [self.cellCategory setCategoryStr:dataDict[@"category"]];
 //    [self.cellStar setStar:dataDict[@"rating"]];
-    
-    
+
     return cell;
 }
 
@@ -122,5 +127,16 @@ static NSString * const reuseIdentifier = @"genericCell";
 	
 }
 */
-
+#pragma mark - 
+-(void) loadGalleryAtIndex:(NSInteger)index{
+    self.isHentaiParserLoading = YES;
+    NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
+//    NSString *filterString = [HentaiSearchFilter searchFilterUrlByKeyword:searchWord filterArray:[filterView filterResult] baseUrl:baseUrlString];
+    
+    [HentaiParser requestListAtFilterUrl:baseUrlString completion: ^(HentaiParserStatus status, NSArray *listArray) {
+        [self.galleries addObjectsFromArray:listArray];
+        [self.collectionView reloadData];
+        self.isHentaiParserLoading = NO;
+    }];
+}
 @end
