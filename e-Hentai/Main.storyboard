@@ -56,6 +56,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <segue destination="DNz-R0-Lsg" kind="show" id="fZG-RY-Oam"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -67,7 +70,15 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xmh-MA-1w9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="134" y="1247"/>
+            <point key="canvasLocation" x="118" y="1241"/>
+        </scene>
+        <!--Photo Page View Controller-->
+        <scene sceneID="bT2-mp-7N4">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" pageSpacing="12" navigationOrientation="horizontal" spineLocation="none" id="DNz-R0-Lsg" customClass="APhotoPageViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="01V-ob-3hj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="915" y="1241"/>
         </scene>
     </scenes>
 </document>

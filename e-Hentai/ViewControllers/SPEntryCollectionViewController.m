@@ -7,10 +7,11 @@
 //
 
 #import "SPEntryCollectionViewController.h"
+#import "APhotoPageViewController.h"
 //HentaiCore
 #import "HentaiSearchFilter.h"
 #import "HentaiFilterView.h"
-
+//HentaiCore - 3rd, Cache
 #import "UIImageView+WebCache.h"
 
 NSInteger const kSPEntryCollectionViewCellImageTag = 100;
@@ -49,15 +50,30 @@ static NSString * const reuseIdentifier = @"genericCell";
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    APhotoPageViewController * photoVC = segue.destinationViewController;
+    
+//    // kick things off by making the first page
+//    PhotoViewController *pageZero = [PhotoViewController photoViewControllerForPageIndex:0];
+//    if (pageZero != nil)
+//    {
+//        // assign the first page to the pageViewController (our rootViewController)
+//        UIPageViewController *pageViewController = (UIPageViewController *)self.window.rootViewController;
+//        pageViewController.dataSource = self;
+//        
+//        [pageViewController setViewControllers:@[pageZero]
+//                                     direction:UIPageViewControllerNavigationDirectionForward
+//                                      animated:NO
+//                                    completion:NULL];
+//    }
 }
-*/
+
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

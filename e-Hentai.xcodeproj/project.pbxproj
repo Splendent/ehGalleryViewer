@@ -66,7 +66,10 @@
 		04376E0019B96B9C001B1599 /* CategoryTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 04376DFF19B96B9C001B1599 /* CategoryTitle.m */; };
 		04376E0319B96BAE001B1599 /* RatingStar.m in Sources */ = {isa = PBXBuildFile; fileRef = 04376E0219B96BAE001B1599 /* RatingStar.m */; };
 		623186601A0BC04D0018E3CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6231865F1A0BC04D0018E3CB /* Main.storyboard */; };
-		6231869C1A0BC4500018E3CB /* SPEntryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6231869B1A0BC4500018E3CB /* SPEntryCollectionViewController.m */; };
+		62AAAF0D1A0F6102007F9981 /* AImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF081A0F6102007F9981 /* AImageScrollView.m */; };
+		62AAAF0E1A0F6102007F9981 /* APhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF0A1A0F6102007F9981 /* APhotoViewController.m */; };
+		62AAAF121A0F610A007F9981 /* SPEntryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF111A0F610A007F9981 /* SPEntryCollectionViewController.m */; };
+		62AAAF161A0F6305007F9981 /* APhotoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF151A0F6305007F9981 /* APhotoPageViewController.m */; };
 		9F9C3B5719D82DBA007CFF81 /* HentaiFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F9C3B5419D82DBA007CFF81 /* HentaiFilterView.m */; };
 		9F9C3B5819D82DBA007CFF81 /* HentaiSearchFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F9C3B5619D82DBA007CFF81 /* HentaiSearchFilter.m */; };
 /* End PBXBuildFile section */
@@ -188,8 +191,14 @@
 		04376E0119B96BAE001B1599 /* RatingStar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatingStar.h; sourceTree = "<group>"; };
 		04376E0219B96BAE001B1599 /* RatingStar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatingStar.m; sourceTree = "<group>"; };
 		6231865F1A0BC04D0018E3CB /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		6231869A1A0BC4500018E3CB /* SPEntryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPEntryCollectionViewController.h; sourceTree = "<group>"; };
-		6231869B1A0BC4500018E3CB /* SPEntryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPEntryCollectionViewController.m; sourceTree = "<group>"; };
+		62AAAF071A0F6102007F9981 /* AImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AImageScrollView.h; path = ViewControllers/PhotoScroller/AImageScrollView.h; sourceTree = "<group>"; };
+		62AAAF081A0F6102007F9981 /* AImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AImageScrollView.m; path = ViewControllers/PhotoScroller/AImageScrollView.m; sourceTree = "<group>"; };
+		62AAAF091A0F6102007F9981 /* APhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APhotoViewController.h; path = ViewControllers/PhotoScroller/APhotoViewController.h; sourceTree = "<group>"; };
+		62AAAF0A1A0F6102007F9981 /* APhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APhotoViewController.m; path = ViewControllers/PhotoScroller/APhotoViewController.m; sourceTree = "<group>"; };
+		62AAAF101A0F610A007F9981 /* SPEntryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPEntryCollectionViewController.h; path = ViewControllers/SPEntryCollectionViewController.h; sourceTree = "<group>"; };
+		62AAAF111A0F610A007F9981 /* SPEntryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPEntryCollectionViewController.m; path = ViewControllers/SPEntryCollectionViewController.m; sourceTree = "<group>"; };
+		62AAAF141A0F6305007F9981 /* APhotoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APhotoPageViewController.h; path = ViewControllers/PhotoScroller/APhotoPageViewController.h; sourceTree = "<group>"; };
+		62AAAF151A0F6305007F9981 /* APhotoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APhotoPageViewController.m; path = ViewControllers/PhotoScroller/APhotoPageViewController.m; sourceTree = "<group>"; };
 		9F9C3B5319D82DBA007CFF81 /* HentaiFilterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HentaiFilterView.h; sourceTree = "<group>"; };
 		9F9C3B5419D82DBA007CFF81 /* HentaiFilterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HentaiFilterView.m; sourceTree = "<group>"; };
 		9F9C3B5519D82DBA007CFF81 /* HentaiSearchFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HentaiSearchFilter.h; sourceTree = "<group>"; };
@@ -385,19 +394,18 @@
 		0199268E19ADDB83009F814B /* e-Hentai */ = {
 			isa = PBXGroup;
 			children = (
+				6231865F1A0BC04D0018E3CB /* Main.storyboard */,
+				62AAAF101A0F610A007F9981 /* SPEntryCollectionViewController.h */,
+				62AAAF111A0F610A007F9981 /* SPEntryCollectionViewController.m */,
+				62AAAEFD1A0F5FB2007F9981 /* PhotoScoller */,
 				6231865E1A0BBE430018E3CB /* HentaiCore */,
 				0150033619B6E5E90055F47D /* ThirdParty */,
 				0118080519B6F06200FE0DA1 /* Common */,
 				0199269719ADDB83009F814B /* AppDelegate.h */,
 				0199269819ADDB83009F814B /* AppDelegate.m */,
-				0118080A19B6F06200FE0DA1 /* MainViewController */,
-				0118081119B6F06200FE0DA1 /* PhotoViewController */,
-				0163C7D419D8FC5600105ECF /* DownloadedViewController */,
+				62AAAF131A0F61E6007F9981 /* Unused */,
 				019926A019ADDB83009F814B /* Images.xcassets */,
 				0199268F19ADDB83009F814B /* Supporting Files */,
-				6231865F1A0BC04D0018E3CB /* Main.storyboard */,
-				6231869A1A0BC4500018E3CB /* SPEntryCollectionViewController.h */,
-				6231869B1A0BC4500018E3CB /* SPEntryCollectionViewController.m */,
 			);
 			path = "e-Hentai";
 			sourceTree = "<group>";
@@ -493,6 +501,29 @@
 				9F9C3B5219D82DBA007CFF81 /* HentaiSearchFilter */,
 			);
 			name = HentaiCore;
+			sourceTree = "<group>";
+		};
+		62AAAEFD1A0F5FB2007F9981 /* PhotoScoller */ = {
+			isa = PBXGroup;
+			children = (
+				62AAAF071A0F6102007F9981 /* AImageScrollView.h */,
+				62AAAF081A0F6102007F9981 /* AImageScrollView.m */,
+				62AAAF091A0F6102007F9981 /* APhotoViewController.h */,
+				62AAAF0A1A0F6102007F9981 /* APhotoViewController.m */,
+				62AAAF141A0F6305007F9981 /* APhotoPageViewController.h */,
+				62AAAF151A0F6305007F9981 /* APhotoPageViewController.m */,
+			);
+			name = PhotoScoller;
+			sourceTree = "<group>";
+		};
+		62AAAF131A0F61E6007F9981 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				0118080A19B6F06200FE0DA1 /* MainViewController */,
+				0118081119B6F06200FE0DA1 /* PhotoViewController */,
+				0163C7D419D8FC5600105ECF /* DownloadedViewController */,
+			);
+			name = Unused;
 			sourceTree = "<group>";
 		};
 		9F9C3B5219D82DBA007CFF81 /* HentaiSearchFilter */ = {
@@ -614,9 +645,12 @@
 				016BBF0D19B94E4F0015E11E /* LightWeightPlist+AccessObject.m in Sources */,
 				0150034519B6E5E90055F47D /* TFHppleElement.m in Sources */,
 				0150034819B6E5E90055F47D /* SVProgressHUD.m in Sources */,
+				62AAAF161A0F6305007F9981 /* APhotoPageViewController.m in Sources */,
 				016BBF0C19B94E4F0015E11E /* FMStream.m in Sources */,
+				62AAAF0D1A0F6102007F9981 /* AImageScrollView.m in Sources */,
 				0150034619B6E5E90055F47D /* XPathQuery.m in Sources */,
 				9F9C3B5819D82DBA007CFF81 /* HentaiSearchFilter.m in Sources */,
+				62AAAF0E1A0F6102007F9981 /* APhotoViewController.m in Sources */,
 				016BBF0F19B94E4F0015E11E /* LightWeightPlist+HandleCache.m in Sources */,
 				0118081619B6F06200FE0DA1 /* HentaiNavigationController.m in Sources */,
 				040541C119B8182400139AC9 /* SDWebImageDownloaderOperation.m in Sources */,
@@ -627,6 +661,7 @@
 				015A5CEF19B8598C004B0063 /* HentaiPhotoCell.m in Sources */,
 				0118081519B6F06200FE0DA1 /* FakeViewController.m in Sources */,
 				040541BE19B8182400139AC9 /* SDWebImageCompat.m in Sources */,
+				62AAAF121A0F610A007F9981 /* SPEntryCollectionViewController.m in Sources */,
 				040541BC19B8182400139AC9 /* NSData+ImageContentType.m in Sources */,
 				0118081B19B6F06200FE0DA1 /* PhotoViewController.m in Sources */,
 				0137F40F19C1695800528359 /* HentaiDownloadBookOperation.m in Sources */,
@@ -640,7 +675,6 @@
 				040541C819B8182400139AC9 /* UIImageView+HighlightedWebCache.m in Sources */,
 				016BBF0E19B94E4F0015E11E /* LightWeightPlist+FilePath.m in Sources */,
 				0137F40C19C1688200528359 /* HentaiDownloadCenter.m in Sources */,
-				6231869C1A0BC4500018E3CB /* SPEntryCollectionViewController.m in Sources */,
 				040541BB19B8182400139AC9 /* MKAnnotationView+WebCache.m in Sources */,
 				040541C519B8182400139AC9 /* UIImage+GIF.m in Sources */,
 				016BBF1219B94E4F0015E11E /* LightWeightPlistObjects.m in Sources */,
