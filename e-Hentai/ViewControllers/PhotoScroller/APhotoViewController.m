@@ -52,6 +52,7 @@
 {
     NSUInteger _pageIndex;
 }
+@property (nonatomic, strong) UIImage * image;
 @end
 
 @implementation APhotoViewController
@@ -65,13 +66,29 @@
     }
     return nil;
 }
-
++ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image
+{
+    if (image)
+    {
+        return [[self alloc] initWithImage:image];
+    }
+    return nil;
+}
 - (id)initWithPageIndex:(NSInteger)pageIndex
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
         _pageIndex = pageIndex;
+    }
+    return self;
+}
+- (id)initWithImage:(UIImage *)image
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self)
+    {
+        self.image = image;
     }
     return self;
 }
@@ -83,10 +100,10 @@
 
 - (void)loadView
 {
-    AImageScrollView *scrollView = [[AImageScrollView alloc] init];
-    scrollView.index = _pageIndex;
-    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.view = scrollView;
+        AImageScrollView *scrollView = [[AImageScrollView alloc] init];
+        scrollView.image = self.image;
+        scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.view = scrollView;
 }
 
 // (this can also be defined in Info.plist via UISupportedInterfaceOrientations)

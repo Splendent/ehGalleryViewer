@@ -74,18 +74,17 @@
         self.showsHorizontalScrollIndicator = NO;
         self.bouncesZoom = YES;
         self.decelerationRate = UIScrollViewDecelerationRateFast;
-        self.delegate = self;        
+        self.delegate = self;
     }
     return self;
 }
-
-- (void)setIndex:(NSUInteger)index
+- (void)setImage:(UIImage *)image
 {
-    _index = index;
-    
-    [self displayImage:[self.images objectAtIndex:index]];
+    if(_image != image){
+        _image = image;
+        [self displayImage:self.image];
+    }
 }
-
 - (void)layoutSubviews 
 {
     [super layoutSubviews];
@@ -135,6 +134,7 @@
 
 - (void)displayImage:(UIImage *)image
 {
+    
     // clear the previous image
     [_zoomView removeFromSuperview];
     _zoomView = nil;

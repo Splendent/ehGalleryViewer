@@ -10,7 +10,11 @@
 #import "APhotoViewController.h"
 
 @interface APhotoPageViewController ()
-
+@property (nonatomic, strong) NSString * hentaiKey;
+@property (nonatomic, assign) NSInteger page;
+#warning removable vars
+@property (nonatomic, strong) NSMutableArray * hentaiImageURLs;
+@property (nonatomic, strong) NSMutableDictionary * hentaiResults;
 @end
 
 @implementation APhotoPageViewController
@@ -18,15 +22,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.page = 0;
     self.dataSource = self;
 }
 - (void)viewWillAppear:(BOOL)animated {
+    self.hentaiResults = [NSMutableDictionary new];
     NSString * hentaiURLString = self.galleryInfo[@"url"];
     NSString * galleryImageCount = self.galleryInfo[@"filecount"];
     
     [HentaiParser requestImagesAtURL:hentaiURLString atIndex:0 completion: ^(HentaiParserStatus status, NSArray *images) {
         //Return images url array
         if (status == HentaiParserStatusSuccess) {
+            self.hentaiImageURLs = [images mutableCopy];
             for (NSString *imageURL in images) {
                 [self createNewOperation:imageURL];
             }
@@ -44,13 +51,16 @@
     }];
     
     // kick things off by making the first page
-    APhotoViewController *pageZero = [APhotoViewController photoViewControllerForPageIndex:0];
+    APhotoViewController *pageZero = [APhotoViewController photoViewControllerForImage:[UIImage imageNamed:@"aaa"]];
     if (pageZero != nil)
     {
+        dispatch_async(dispatch_get_main_queue(), ^{
+
         [self setViewControllers:@[pageZero]
                        direction:UIPageViewControllerNavigationDirectionForward
                         animated:YES
                       completion:NULL];
+        });
     }
     [super viewWillAppear:animated];
 }
@@ -62,10 +72,19 @@
     HentaiDownloadImageOperation *newOperation = [HentaiDownloadImageOperation new];
     newOperation.downloadURLString = urlString;
     newOperation.isCacheOperation = NO;
-//    newOperation.hentaiKey = self.hentaiKey;
+    newOperation.hentaiKey = self.hentaiKey;
     newOperation.delegate = self;
 //    [self.hentaiQueue addOperation:newOperation];
     [newOperation start];
+}
+- (NSString *)hentaiKey {
+    if(_hentaiKey == nil){
+        NSArray *splitStrings = [self.galleryInfo[@"url"] componentsSeparatedByString:@"/"];
+        NSUInteger splitCount = [splitStrings count];
+        NSString *checkHentaiKey = [NSString stringWithFormat:@"%@-%@-%@", splitStrings[splitCount - 3], splitStrings[splitCount - 2], self.galleryInfo[@"title"]];
+        _hentaiKey = [checkHentaiKey stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+    }
+    return _hentaiKey;
 }
 /*
 #pragma mark - Navigation
@@ -78,21 +97,74 @@
 */
 #pragma mark - HentaiDownloadImageOperationDelegate
 - (void)downloadResult:(NSString *)urlString heightOfSize:(CGFloat)height isSuccess:(BOOL)isSuccess {
-    
+    NSLog(@"%@",urlString);
+//    if (isSuccess) {
+    self.hentaiResults[[urlString lastPathComponent]] = @(height);
+//        NSInteger availableCount = [self availableCount];
+//        if (availableCount > self.realDisplayCount) {
+//            if (availableCount >= 1) {
+//                [SVProgressHUD dismiss];
+//            }
+//            self.realDisplayCount = availableCount;
+//            [self.hentaiTableView reloadData];
+//        }
+//    }
+//    else {
+//        NSNumber *retryCount = self.retryMap[urlString];
+//        if (retryCount) {
+//            retryCount = @([retryCount integerValue] + 1);
+//        }
+//        else {
+//            retryCount = @(1);
+//        }
+//        self.retryMap[urlString] = retryCount;
+//        
+//        if ([retryCount integerValue] <= 3) {
+//            [self createNewOperation:urlString];
+//        }
+//        else {
+//            self.failCount++;
+//            self.maxHentaiCount = [NSString stringWithFormat:@"%ld", [self.maxHentaiCount integerValue] - 1];
+//            [self.hentaiImageURLs removeObject:urlString];
+//        }
+//    }
 }
 
 
 #pragma mark - UIPageViewControllerDataSource
-
+- (UIImage *)imageForIndex:(NSInteger)index
+{
+    NSLog(@"loadIndex:%ld",(long)index);
+    if(self.hentaiImageURLs!=nil) {
+        FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:self.hentaiKey];
+        NSString *eachImageString = self.hentaiImageURLs[index];
+        if (self.hentaiResults[[eachImageString lastPathComponent]]) {
+            UIImage *image = [UIImage imageWithData:[hentaiFilesManager read:[eachImageString lastPathComponent]]];
+            return image;
+        }
+    }
+    return nil;
+}
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
-    NSUInteger index = vc.pageIndex;
-    return [APhotoViewController photoViewControllerForPageIndex:(index - 1)];
+    if (vc.pageIndex == 0) {
+        return nil;
+    }
+    self.page --;
+    UIImage * img = [self imageForIndex:self.page];
+    if(img != nil){
+        return [APhotoViewController photoViewControllerForImage:img];
+    }
+    return nil;
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(APhotoViewController *)vc
 {
-    NSUInteger index = vc.pageIndex;
-    return [APhotoViewController photoViewControllerForPageIndex:(index + 1)];
+    self.page++;
+    UIImage * img = [self imageForIndex:self.page];
+    if(img != nil){
+        return [APhotoViewController photoViewControllerForImage:img];
+    }
+    return nil;
 }
 @end

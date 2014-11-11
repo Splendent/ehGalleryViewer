@@ -48,8 +48,6 @@
 #import <UIKit/UIKit.h>
 
 @interface AImageScrollView : UIScrollView
-
-@property (nonatomic) NSUInteger index;
-@property (nonatomic, strong) NSMutableArray * images;
+@property (nonatomic, strong) UIImage * image;
 
 @end
