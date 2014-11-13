@@ -76,7 +76,8 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	if (![self isCancelled]) {
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-		    UIImage *image = [self resizeImageWithImage:[[UIImage alloc] initWithData:self.recvData]];
+//		    UIImage *image = [self resizeImageWithImage:[[UIImage alloc] initWithData:self.recvData]];
+            UIImage *image = [UIImage imageWithData:self.recvData];
             
 		    if (self.isCacheOperation) {
 		        [[[[FilesManager cacheFolder] fcd:@"Hentai"] fcd:self.hentaiKey] write:UIImageJPEGRepresentation(image, 0.6f) filename:[self.downloadURLString lastPathComponent]];
