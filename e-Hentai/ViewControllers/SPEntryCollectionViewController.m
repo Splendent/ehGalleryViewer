@@ -28,21 +28,22 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.galleries = [NSMutableArray array];
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Do any additional setup after loading the view.
 }
 - (void)viewWillAppear:(BOOL)animated {
-    self.galleries = [NSMutableArray array];
     self.webPageIndex = 0;
     self.isHentaiParserLoading = NO;
     
-    [super viewWillAppear:animated];
     [HentaiParser requestListAtIndex:self.webPageIndex completion: ^(HentaiParserStatus status, NSArray *listArray) {
         [self.galleries addObjectsFromArray:listArray];
         [self.collectionView reloadData];
     }];
+    
+    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
