@@ -1,0 +1,3 @@
+[submodule "e-Hentai/ThirdParty/AFNetworking"]
+	path = e-Hentai/ThirdParty/AFNetworking
+	url = https://github.com/AFNetworking/AFNetworking.git
