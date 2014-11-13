@@ -49,8 +49,7 @@
 
 @interface APhotoViewController : UIViewController
 
-+ (APhotoViewController *)photoViewControllerForPageIndex:(NSUInteger)pageIndex;
-+ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image;
++ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
 
 @end

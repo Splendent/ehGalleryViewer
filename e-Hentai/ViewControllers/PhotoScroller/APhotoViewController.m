@@ -56,39 +56,21 @@
 @end
 
 @implementation APhotoViewController
-
-+ (APhotoViewController *)photoViewControllerForPageIndex:(NSUInteger)pageIndex
++ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex
 {
-#warning there should check gallery image count
-    if (pageIndex)
+    if (image && pageIndex)
     {
-        return [[self alloc] initWithPageIndex:pageIndex];
+        return [[self alloc] initWithImage:image pageIndex:pageIndex];
     }
     return nil;
 }
-+ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image
-{
-    if (image)
-    {
-        return [[self alloc] initWithImage:image];
-    }
-    return nil;
-}
-- (id)initWithPageIndex:(NSInteger)pageIndex
+- (id)initWithImage:(UIImage *)image pageIndex:(NSInteger)pageIndex
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
+        _image = image;
         _pageIndex = pageIndex;
-    }
-    return self;
-}
-- (id)initWithImage:(UIImage *)image
-{
-    self = [super initWithNibName:nil bundle:nil];
-    if (self)
-    {
-        self.image = image;
     }
     return self;
 }
