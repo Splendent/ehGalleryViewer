@@ -28,11 +28,13 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.galleries = [NSMutableArray array];
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Do any additional setup after loading the view.
+    [self.navigationController setHidesBarsOnTap:NO];
+    [self.navigationController setHidesBarsOnSwipe:YES];
+    self.galleries = [NSMutableArray array];
 }
 - (void)viewWillAppear:(BOOL)animated {
     self.webPageIndex = 0;
