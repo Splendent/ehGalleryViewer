@@ -12,9 +12,10 @@
 
 @interface APhotoPageViewController ()
 @property (nonatomic, strong) NSString * hentaiKey;
-#warning removable vars
+@property (nonatomic, strong) NSString * hentaiURLString;
 @property (nonatomic, strong) NSMutableArray * hentaiImageURLs;
 @property (nonatomic, assign) NSString * galleryImageCount;
+@property (nonatomic, assign) BOOL isParserLoading;
 @end
 
 @implementation APhotoPageViewController
@@ -25,29 +26,10 @@
     self.dataSource = self;
 }
 - (void)viewWillAppear:(BOOL)animated {
-//    self.hentaiResults = [NSMutableDictionary new];
-    NSString * hentaiURLString = self.galleryInfo[@"url"];
+    self.isParserLoading = NO;
+    self.hentaiURLString = self.galleryInfo[@"url"];
     self.galleryImageCount = self.galleryInfo[@"filecount"];
-    
-    [HentaiParser requestImagesAtURL:hentaiURLString atIndex:0 completion: ^(HentaiParserStatus status, NSArray *images) {
-        //Return images url array
-        if (status == HentaiParserStatusSuccess) {
-            self.hentaiImageURLs = [images mutableCopy];
-            for (NSString *imageURL in images) {
-                [self createNewOperation:imageURL];
-            }
-        }
-        else if (status == HentaiParserStatusFail) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"讀取失敗囉" message:nil delegate:nil cancelButtonTitle:@"確定" otherButtonTitles:nil];
-            [alert show];
-            [SVProgressHUD dismiss];
-        }
-        else if ([images count] == 0) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"讀取失敗囉" message:nil delegate:nil cancelButtonTitle:@"確定" otherButtonTitles:nil];
-            [alert show];
-            [SVProgressHUD dismiss];
-        }
-    }];
+    [self loadImageURLsForPage:0];
     
     // kick things off by making the first page
     APhotoViewController *pageZero = [APhotoViewController photoViewControllerForImage:[UIImage imageNamed:@"aaa"] pageIndex:1];
@@ -69,11 +51,11 @@
     
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    
+    __weak APhotoPageViewController * weakSelf = self;
     NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         //        NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
         //        return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
-        NSURL * docURL = [NSURL fileURLWithPath:[[[FilesManager documentFolder] fcd:self.hentaiKey] currentPath]];
+        NSURL * docURL = [NSURL fileURLWithPath:[[[FilesManager documentFolder] fcd:weakSelf.hentaiKey] currentPath]];
         return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
         NSLog(@"File downloaded to: %@", filePath);
@@ -89,6 +71,33 @@
     }
     return _hentaiKey;
 }
+- (void)loadImageURLsForPage:(NSInteger)index {
+    self.isParserLoading = YES;
+    [HentaiParser requestImagesAtURL:self.hentaiURLString atIndex:index completion: ^(HentaiParserStatus status, NSArray *images) {
+        self.isParserLoading = NO;
+        //Return images url array
+        if (status == HentaiParserStatusSuccess) {
+            self.hentaiImageURLs = [images mutableCopy];
+            for (NSString *imageURL in images) {
+                FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:self.hentaiKey];
+                BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[hentaiFilesManager currentPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
+                if (isExist == NO) {
+                    [self createNewOperation:imageURL];
+                }
+            }
+        }
+        else if (status == HentaiParserStatusFail) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"讀取失敗囉" message:nil delegate:nil cancelButtonTitle:@"確定" otherButtonTitles:nil];
+            [alert show];
+            [SVProgressHUD dismiss];
+        }
+        else if ([images count] == 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"讀取失敗囉" message:nil delegate:nil cancelButtonTitle:@"確定" otherButtonTitles:nil];
+            [alert show];
+            [SVProgressHUD dismiss];
+        }
+    }];
+}
 /*
 #pragma mark - Navigation
 
@@ -103,17 +112,19 @@
 - (UIImage *)imageForIndex:(NSInteger)index
 {
     NSLog(@"loadIndex:%ld",(long)index);
+    UIImage *image = nil;
     if(index < [self.galleryImageCount integerValue]) {
-        FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:self.hentaiKey];
-        NSString *eachImageString = self.hentaiImageURLs[index];
-//        if (self.hentaiResults[[eachImageString lastPathComponent]]) {
-            UIImage *image = [UIImage imageWithData:[hentaiFilesManager read:[eachImageString lastPathComponent]]];
-            return image;
-//        }
-    } else if (self.hentaiImageURLs == nil || [self.hentaiImageURLs count] == 0){
+        if(index + 10 > [self.hentaiImageURLs count] && self.isParserLoading == NO) {
+            [self loadImageURLsForPage:(index / 40 + 1)];
+        }
         
+        if(index < [self.hentaiImageURLs count]) {
+            FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:self.hentaiKey];
+            NSString *eachImageString = self.hentaiImageURLs[index];
+            image = [UIImage imageWithData:[hentaiFilesManager read:[eachImageString lastPathComponent]]];
+        }
     }
-    return nil;
+    return image;
 }
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
