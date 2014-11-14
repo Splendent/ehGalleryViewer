@@ -20,7 +20,8 @@
 
 - (NSString *)tmpPath:(NSString *)folder {
 	NSMutableArray *tmpSubPaths = [NSMutableArray arrayWithArray:self.subPaths];
-	[tmpSubPaths addObject:folder];
+    if(folder != nil)
+        [tmpSubPaths addObject:folder];
 	return [self.basePath stringByAppendingPathComponent:[tmpSubPaths componentsJoinedByString:@"/"]];
 }
 
@@ -80,7 +81,8 @@
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 
 	if ([fileManager fileExistsAtPath:[self tmpPath:folder]]) {
-		[self.subPaths addObject:folder];
+        if(folder != nil)
+            [self.subPaths addObject:folder];
 		return self;
 	}
 	else {
@@ -92,7 +94,8 @@
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 
 	if ([fileManager fileExistsAtPath:[self tmpPath:folder]]) {
-		[self.subPaths addObject:folder];
+        if(folder != nil)
+            [self.subPaths addObject:folder];
 	}
 	else {
 		[[self md:folder] cd:folder];
