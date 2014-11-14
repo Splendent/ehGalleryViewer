@@ -20,6 +20,7 @@ NSInteger const kSPEntryCollectionViewCellLabelTag = 200;
 @property (nonatomic, assign) NSInteger webPageIndex;
 @property (nonatomic, strong) NSMutableArray * galleries;
 @property (nonatomic, assign) BOOL isHentaiParserLoading;
+@property (nonatomic, strong) UIRefreshControl * refreshControl;
 @end
 
 @implementation SPEntryCollectionViewController
@@ -34,18 +35,20 @@ static NSString * const reuseIdentifier = @"genericCell";
     // Do any additional setup after loading the view.
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
+    
+    self.galleries = [NSMutableArray array];
+    
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(startRefresh:)
+                  forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:self.refreshControl];
 }
 - (void)viewWillAppear:(BOOL)animated {
     self.webPageIndex = 0;
     self.isHentaiParserLoading = NO;
-    __weak SPEntryCollectionViewController * weakSelf = self;
-    [HentaiParser requestListAtIndex:self.webPageIndex completion: ^(HentaiParserStatus status, NSArray *listArray) {
-        DTrace();
-        weakSelf.galleries = [listArray mutableCopy];
-        [weakSelf.collectionView reloadData];
-    }];
     
     [super viewWillAppear:animated];
+    [self loadGalleryAtIndex:self.webPageIndex];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -79,7 +82,8 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row + 5 > [self.galleries count] && self.isHentaiParserLoading == NO){
-        [self loadGalleryAtIndex:indexPath.row];
+        self.webPageIndex++;
+        [self loadGalleryAtIndex:self.webPageIndex];
     }
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
@@ -136,9 +140,16 @@ static NSString * const reuseIdentifier = @"genericCell";
 }
 */
 #pragma mark - 
--(void) loadGalleryAtIndex:(NSInteger)index{
+- (void)startRefresh:(id)sender {
+    [self loadGalleryAtIndex:0];
+}
+- (void)loadGalleryAtIndex:(NSInteger)index {
     self.isHentaiParserLoading = YES;
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
+    if(index == 0) {
+        [self.galleries removeAllObjects];
+        [self.collectionView reloadData];
+    }
 //    NSString *filterString = [HentaiSearchFilter searchFilterUrlByKeyword:searchWord filterArray:[filterView filterResult] baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:baseUrlString completion: ^(HentaiParserStatus status, NSArray *listArray) {
@@ -146,6 +157,7 @@ static NSString * const reuseIdentifier = @"genericCell";
         [weakSelf.galleries addObjectsFromArray:listArray];
         [weakSelf.collectionView reloadData];
         weakSelf.isHentaiParserLoading = NO;
+        [weakSelf.refreshControl endRefreshing];
     }];
 }
 @end
