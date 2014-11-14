@@ -49,6 +49,9 @@
 
 @interface APhotoViewController : UIViewController
 
+@property (nonatomic, strong) UIImage * thumbnail;
+@property (nonatomic, strong) UIImage * placeHolder;
+
 + (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
 

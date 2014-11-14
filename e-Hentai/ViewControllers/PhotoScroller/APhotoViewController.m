@@ -48,6 +48,8 @@
 #import "APhotoViewController.h"
 #import "AImageScrollView.h"
 
+NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder";
+
 @interface APhotoViewController ()
 {
     NSUInteger _pageIndex;
@@ -58,7 +60,7 @@
 @implementation APhotoViewController
 + (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex
 {
-    if (image && pageIndex)
+    if (pageIndex)
     {
         return [[self alloc] initWithImage:image pageIndex:pageIndex];
     }
@@ -69,6 +71,8 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
+        _thumbnail = nil;
+        _placeHolder = [UIImage imageNamed:kAPhotoViewControllerDefaultPlaceholder];
         _image = image;
         _pageIndex = pageIndex;
     }
@@ -82,10 +86,17 @@
 
 - (void)loadView
 {
-        AImageScrollView *scrollView = [[AImageScrollView alloc] init];
-        scrollView.image = self.image;
-        scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.view = scrollView;
+    AImageScrollView *scrollView = [[AImageScrollView alloc] init];
+    UIImage * image;
+    if(self.image)
+        image = self.image;
+    else if (self.thumbnail)
+        image = self.thumbnail;
+    else
+        image = self.placeHolder;
+    scrollView.image = image;
+    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view = scrollView;
 }
 
 // (this can also be defined in Info.plist via UISupportedInterfaceOrientations)

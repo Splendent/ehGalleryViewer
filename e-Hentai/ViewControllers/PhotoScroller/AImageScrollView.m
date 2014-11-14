@@ -49,6 +49,7 @@
 
 #import "AImageScrollView.h"
 
+
 #pragma mark -
 
 @interface AImageScrollView () <UIScrollViewDelegate>
@@ -82,7 +83,7 @@
 {
     if(_image != image){
         _image = image;
-        [self displayImage:self.image];
+        [self displayImage:_image];
     }
 }
 - (void)layoutSubviews 
