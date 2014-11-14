@@ -153,9 +153,12 @@ static NSString * const reuseIdentifier = @"genericCell";
 //    NSString *filterString = [HentaiSearchFilter searchFilterUrlByKeyword:searchWord filterArray:[filterView filterResult] baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:baseUrlString completion: ^(HentaiParserStatus status, NSArray *listArray) {
-        DTrace();
-        [weakSelf.galleries addObjectsFromArray:listArray];
-        [weakSelf.collectionView reloadData];
+        if(status == HentaiParserStatusSuccess) {
+            [weakSelf.galleries addObjectsFromArray:listArray];
+            [weakSelf.collectionView reloadData];
+        } else {
+            
+        }
         weakSelf.isHentaiParserLoading = NO;
         [weakSelf.refreshControl endRefreshing];
     }];

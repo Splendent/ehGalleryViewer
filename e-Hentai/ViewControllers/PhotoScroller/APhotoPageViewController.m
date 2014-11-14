@@ -84,10 +84,9 @@
         self.isParserLoading = NO;
         //Return images url array
         if (status == HentaiParserStatusSuccess) {
-            DTrace();
-            [weakSelf.galleryImageURLs addObjectsFromArray:[images copy]];
+            [weakSelf.galleryImageURLs addObjectsFromArray:images];
             for (NSString *imageURL in images) {
-                FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:self.hentaiKey];
+                FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:weakSelf.hentaiKey];
                 BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[hentaiFilesManager currentPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
                 if (isExist == NO) {
                     [weakSelf createNewOperation:imageURL];
