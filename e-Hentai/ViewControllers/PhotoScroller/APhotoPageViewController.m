@@ -128,11 +128,13 @@
 }
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
+    if(vc.pageIndex - 1 < 0)return nil;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex - 1] pageIndex:vc.pageIndex - 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(APhotoViewController *)vc
 {
+    if(vc.pageIndex + 1 > [self.galleryImageCount integerValue] - 1)return nil;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1] pageIndex:vc.pageIndex + 1];
 }
 @end
