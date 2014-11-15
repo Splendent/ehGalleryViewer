@@ -15,7 +15,10 @@
 @property (nonatomic, strong) NSString * galleryURLString;
 @property (nonatomic, strong) NSMutableArray * galleryImageURLs;
 @property (nonatomic, assign) NSString * galleryImageCount;
-@property (nonatomic, strong) AFURLSessionManager * sessionManager;
+@property (nonatomic, strong) NSOperationQueue * galleryDownloadQueue;
+@property (nonatomic, assign) NSInteger currentPage;
+
+//@property (nonatomic, strong) AFURLSessionManager * sessionManager;
 @property (nonatomic, assign) BOOL isParserLoading;
 @end
 
@@ -34,41 +37,35 @@
     self.galleryImageURLs = [NSMutableArray array];
     self.galleryURLString = self.galleryInfo[@"url"];
     self.galleryImageCount = self.galleryInfo[@"filecount"];
+    self.galleryDownloadQueue = [NSOperationQueue new];
+    [self.galleryDownloadQueue setMaxConcurrentOperationCount:5];
     [self loadImageURLsForPage:0];
     
     // kick things off by making the first page
     // it will crash if set pageIndex:0, magic
-    APhotoViewController *pageZero = [APhotoViewController photoViewControllerForImage:[UIImage imageNamed:@"aaa"] pageIndex:1];
-    if (pageZero != nil)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-
-        [self setViewControllers:@[pageZero]
-                       direction:UIPageViewControllerNavigationDirectionForward
-                        animated:animated
-                      completion:NULL];
-        });
-    }
+    self.currentPage = 1;
+    [self refreshPageView:self.currentPage animated:NO];
     [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     DTrace();
+    [self.galleryDownloadQueue cancelAllOperations];
     [super viewWillDisappear:animated];
 }
 - (void)dealloc{
     DTrace();
-#warning downloadtask should cancel after dealloc, but it seems not working, it casuse createNewOperation, FilesMaager fcd crash
-    [self.sessionManager.operationQueue cancelAllOperations];
-    [self.sessionManager invalidateSessionCancelingTasks:YES];
+    //#warning downloadtask should cancel after dealloc, but it seems not working, it casuse createNewOperation, FilesMaager fcd crash
+    //    [self.sessionManager.operationQueue cancelAllOperations];
+    //    [self.sessionManager invalidateSessionCancelingTasks:YES];
 }
-- (AFURLSessionManager *)sessionManager {
-    if(_sessionManager == nil){
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        _sessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-    }
-    return _sessionManager;
-}
+//- (AFURLSessionManager *)sessionManager {
+//    if(_sessionManager == nil){
+//        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//        _sessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//    }
+//    return _sessionManager;
+//}
 
 - (NSString *)hentaiKey {
     if(_hentaiKey == nil){
@@ -83,28 +80,33 @@
     return [[[FilesManager documentFolder] fcd:self.hentaiKey] currentPath];
 }
 - (void)createNewOperation:(NSString *)urlString {
-    
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    __weak APhotoPageViewController * weakSelf = self;
-    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-        NSURL * docURL = [NSURL fileURLWithPath:[weakSelf galleryFolderPath]];
-        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        DTrace();
-//        DLog(@"File downloaded to: %@", filePath);
-    }];
-    [downloadTask resume];
+    HentaiDownloadImageOperation *newOperation = [HentaiDownloadImageOperation new];
+    newOperation.downloadURLString = urlString;
+    newOperation.isCacheOperation = NO;
+    newOperation.hentaiKey = self.hentaiKey;
+    newOperation.delegate = self;
+    [self.galleryDownloadQueue addOperation:newOperation];
+    //    NSURL *URL = [NSURL URLWithString:urlString];
+    //    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    //    __weak APhotoPageViewController * weakSelf = self;
+    //    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+    //        NSURL * docURL = [NSURL fileURLWithPath:[weakSelf galleryFolderPath]];
+    //        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
+    //    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+    //        DTrace();
+    //    }];
+    //    [downloadTask resume];
 }
 - (void)loadImageURLsForPage:(NSInteger)index {
-    DPLog(@"load Page:%ld",(long)index);
+    DPLog(@"load Page:%ld/%ld",(long)index, (long)[self.galleryImageCount integerValue]);
     self.isParserLoading = YES;
     __weak APhotoPageViewController * weakSelf = self;
     [HentaiParser requestImagesAtURL:self.galleryURLString atIndex:index completion: ^(HentaiParserStatus status, NSArray *images) {
         self.isParserLoading = NO;
         //Return images url array
-        if (status == HentaiParserStatusSuccess) {
+        if (status == HentaiParserStatusSuccess && [images count] > 0) { // Node was nil problem, check array count
             [weakSelf.galleryImageURLs addObjectsFromArray:images];
+            [weakSelf refreshPageView:weakSelf.currentPage animated:NO];
             for (NSString *imageURL in images) {
                 BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[weakSelf galleryFolderPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
                 if (isExist == NO) {
@@ -124,22 +126,41 @@
         }
     }];
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - HentaiDownloadImageOperationDelegate
+- (void)downloadResult:(NSString *)urlString heightOfSize:(CGFloat)height isSuccess:(BOOL)isSuccess {
+    //completion delegate
+    DPLog(@"Download Done %@",[urlString lastPathComponent]);
+    BOOL isNearByPage = NO;
+    for(NSInteger i = -1 ; i <=1 ; i++) {
+        NSInteger safeAndOffsetedIndex = self.currentPage + i - 1;
+        if(safeAndOffsetedIndex < 0)safeAndOffsetedIndex = 0;
+        if([[self.galleryImageURLs[safeAndOffsetedIndex] lastPathComponent] isEqualToString:[urlString lastPathComponent]]) {
+            DPLog(@"Ooh. we go a nearby page:%ld to %ld",(long)self.currentPage + i, (long)self.currentPage);
+            isNearByPage = YES;
+        }
+    }
+    if(isNearByPage) {
+        [self refreshPageView:self.currentPage animated:NO];
+    }
 }
-*/
-
+- (void)refreshPageView:(NSInteger)index animated:(BOOL)animated{
+    DTrace();
+    APhotoViewController *currentPage = [APhotoViewController photoViewControllerForImage:[self imageForIndex:index]
+                                                                                pageIndex:index];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self setViewControllers:@[currentPage]
+                       direction:UIPageViewControllerNavigationDirectionForward
+                        animated:animated
+                      completion:NULL];
+    });
+}
 #pragma mark - UIPageViewControllerDataSource
 - (UIImage *)imageForIndex:(NSInteger)index
 {
     DPLog(@"load Index:%ld",(long)index);
     UIImage *image = nil;
-    if(index <= [self.galleryImageCount integerValue]) {                             
+    if(index <= [self.galleryImageCount integerValue]) {
         if(index + 40 >= [self.galleryImageURLs count] &&                            // preload
            self.isParserLoading == NO &&                                             // checking isLoading
            [self.galleryImageURLs count] < [self.galleryImageCount integerValue]) {  // make sure it wont infinity loading
@@ -158,12 +179,14 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
     if(vc.pageIndex - 1 <= 0)return nil;
+    self.currentPage = vc.pageIndex;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex - 1] pageIndex:vc.pageIndex - 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(APhotoViewController *)vc
 {
     if(vc.pageIndex + 1 >= [self.galleryImageCount integerValue] + 1)return nil;
+    self.currentPage = vc.pageIndex;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1] pageIndex:vc.pageIndex + 1];
 }
 @end
