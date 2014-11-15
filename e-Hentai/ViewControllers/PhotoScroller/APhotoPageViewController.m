@@ -139,14 +139,14 @@
 {
     DPLog(@"load Index:%ld",(long)index);
     UIImage *image = nil;
-    if(index < [self.galleryImageCount integerValue]) {
-        if(index + 40 > [self.galleryImageURLs count] &&                             // preload
+    if(index <= [self.galleryImageCount integerValue]) {                             
+        if(index + 40 >= [self.galleryImageURLs count] &&                            // preload
            self.isParserLoading == NO &&                                             // checking isLoading
            [self.galleryImageURLs count] < [self.galleryImageCount integerValue]) {  // make sure it wont infinity loading
             [self loadImageURLsForPage:(index / 40 + 1)];
         }
         
-        if(index < [self.galleryImageURLs count]) {
+        if(index <= [self.galleryImageURLs count]) {
             FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:self.hentaiKey];
             NSString *eachImageString = self.galleryImageURLs[index -1]; // cuz array start from 0
             image = [UIImage imageWithData:[hentaiFilesManager read:[eachImageString lastPathComponent]]];
