@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SPEntryCollectionViewController : UICollectionViewController
+@property (strong, nonatomic) IBOutlet UITextField *searchTextField;
 
 @end

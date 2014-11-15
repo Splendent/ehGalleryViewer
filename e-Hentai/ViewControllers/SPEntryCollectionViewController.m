@@ -47,7 +47,7 @@ static NSString * const reuseIdentifier = @"genericCell";
     [self.navigationController setHidesBarsOnSwipe:YES];
     self.webPageIndex = 0;
     self.isHentaiParserLoading = NO;
-    [self loadGalleryAtIndex:self.webPageIndex];
+    [self createGalleryAtIndex:self.webPageIndex WithFilter:self.searchTextField.text];
     
     [super viewWillAppear:animated];
 }
@@ -146,17 +146,49 @@ static NSString * const reuseIdentifier = @"genericCell";
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
 	
 }
-*/
-#pragma mark - 
+ */
+#pragma mark -
+- (IBAction)search:(id)sender {
+#warning should do something to prevent multiple search
+    //textFieldEndAndExit or click searchBarButton
+    [self.refreshControl beginRefreshing];
+    [self createGalleryAtIndex:0 WithFilter:self.searchTextField.text];
+}
 - (void)startRefresh:(id)sender {
+    //pullToRefresh
     [self loadGalleryAtIndex:0];
 }
-- (void)loadGalleryAtIndex:(NSInteger)index {
+- (NSArray *) filterArray {
+    return @[@1,@2,@3,@4,@5,@6,@7,@8,@9,@0];
+}
+- (void)createGalleryAtIndex:(NSInteger)index {
+    [self createGalleryAtIndex:index WithFilter:@""];
+}
+- (void)createGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter{
     self.isHentaiParserLoading = YES;
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
-//    NSString *filterString = [HentaiSearchFilter searchFilterUrlByKeyword:searchWord filterArray:[filterView filterResult] baseUrl:baseUrlString];
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:filter filterArray:[self filterArray] baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
-    [HentaiParser requestListAtFilterUrl:baseUrlString completion: ^(HentaiParserStatus status, NSArray *listArray) {
+    [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
+        if(status == HentaiParserStatusSuccess) {
+            weakSelf.galleries = [listArray mutableCopy];
+            [weakSelf.collectionView reloadData];
+        } else {
+            
+        }
+        weakSelf.isHentaiParserLoading = NO;
+        [weakSelf.refreshControl endRefreshing];
+    }];
+}
+- (void)loadGalleryAtIndex:(NSInteger)index {
+    [self loadGalleryAtIndex:index WithFilter:@""];
+}
+- (void)loadGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter {
+    self.isHentaiParserLoading = YES;
+    NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:filter filterArray:[self filterArray] baseUrl:baseUrlString];
+    __weak SPEntryCollectionViewController * weakSelf = self;
+    [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
         if(status == HentaiParserStatusSuccess) {
             [weakSelf.galleries addObjectsFromArray:listArray];
             [weakSelf.collectionView reloadData];

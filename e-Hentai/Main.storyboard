@@ -7,7 +7,7 @@
         <!--Navigation Controller-->
         <scene sceneID="R22-yw-Xf7">
             <objects>
-                <navigationController hidesBarsOnSwipe="YES" hidesBarsWhenKeyboardAppears="YES" id="Xpz-RI-egP" sceneMemberID="viewController">
+                <navigationController hidesBarsOnSwipe="YES" id="Xpz-RI-egP" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="kcr-1d-jtM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -68,7 +68,27 @@
                             <outlet property="delegate" destination="2Ti-ZE-yTX" id="DCH-z4-Bgh"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="hfI-H7-7ha"/>
+                    <navigationItem key="navigationItem" id="hfI-H7-7ha">
+                        <nil key="title"/>
+                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="abP-fp-QOC">
+                            <rect key="frame" x="180" y="7" width="240" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" keyboardType="webSearch" returnKeyType="search"/>
+                            <connections>
+                                <action selector="search:" destination="2Ti-ZE-yTX" eventType="editingDidEndOnExit" id="YVC-Hd-7IQ"/>
+                                <outlet property="delegate" destination="2Ti-ZE-yTX" id="wB0-LY-oiU"/>
+                            </connections>
+                        </textField>
+                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="502-be-cIo">
+                            <connections>
+                                <action selector="search:" destination="2Ti-ZE-yTX" id="rmR-kW-jZC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchTextField" destination="abP-fp-QOC" id="ivb-iw-Wye"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xmh-MA-1w9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

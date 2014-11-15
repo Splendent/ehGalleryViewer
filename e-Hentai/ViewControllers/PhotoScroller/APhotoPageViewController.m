@@ -69,20 +69,7 @@
     }
     return _sessionManager;
 }
-- (void)createNewOperation:(NSString *)urlString {
-    
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    __weak APhotoPageViewController * weakSelf = self;
-    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-        NSURL * docURL = [NSURL fileURLWithPath:[[[FilesManager documentFolder] fcd:weakSelf.hentaiKey] currentPath]];
-        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        DTrace();
-//        DLog(@"File downloaded to: %@", filePath);
-    }];
-    [downloadTask resume];
-}
+
 - (NSString *)hentaiKey {
     if(_hentaiKey == nil){
         NSArray *splitStrings = [self.galleryInfo[@"url"] componentsSeparatedByString:@"/"];
@@ -91,6 +78,23 @@
         _hentaiKey = [checkHentaiKey stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
     }
     return _hentaiKey;
+}
+- (NSString *)galleryFolderPath {
+    return [[[FilesManager documentFolder] fcd:self.hentaiKey] currentPath];
+}
+- (void)createNewOperation:(NSString *)urlString {
+    
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    __weak APhotoPageViewController * weakSelf = self;
+    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+        NSURL * docURL = [NSURL fileURLWithPath:[weakSelf galleryFolderPath]];
+        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
+    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        DTrace();
+//        DLog(@"File downloaded to: %@", filePath);
+    }];
+    [downloadTask resume];
 }
 - (void)loadImageURLsForPage:(NSInteger)index {
     DPLog(@"load Page:%ld",(long)index);
@@ -102,8 +106,7 @@
         if (status == HentaiParserStatusSuccess) {
             [weakSelf.galleryImageURLs addObjectsFromArray:images];
             for (NSString *imageURL in images) {
-                FMStream *hentaiFilesManager = [[FilesManager documentFolder] fcd:weakSelf.hentaiKey];
-                BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[hentaiFilesManager currentPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
+                BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[weakSelf galleryFolderPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
                 if (isExist == NO) {
                     [weakSelf createNewOperation:imageURL];
                 }
@@ -151,6 +154,7 @@
     }
     return image;
 }
+#warning photo should reload after download success
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
     if(vc.pageIndex - 1 <= 0)return nil;
@@ -159,7 +163,7 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(APhotoViewController *)vc
 {
-    if(vc.pageIndex + 1 >= [self.galleryImageCount integerValue])return nil;
+    if(vc.pageIndex + 1 >= [self.galleryImageCount integerValue] + 1)return nil;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1] pageIndex:vc.pageIndex + 1];
 }
 @end
