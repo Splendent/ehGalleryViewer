@@ -42,9 +42,9 @@ static NSString * const reuseIdentifier = @"genericCell";
     [self.collectionView addSubview:self.refreshControl];
 }
 - (void)viewWillAppear:(BOOL)animated {
+    DTrace();
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
-    DTrace();
     self.webPageIndex = 0;
     self.isHentaiParserLoading = NO;
     [self loadGalleryAtIndex:self.webPageIndex];

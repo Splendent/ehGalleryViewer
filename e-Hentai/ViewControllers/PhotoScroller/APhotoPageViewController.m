@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSString * galleryURLString;
 @property (nonatomic, strong) NSMutableArray * galleryImageURLs;
 @property (nonatomic, assign) NSString * galleryImageCount;
+@property (nonatomic, strong) AFURLSessionManager * sessionManager;
 @property (nonatomic, assign) BOOL isParserLoading;
 @end
 
@@ -23,11 +24,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self.navigationController setHidesBarsOnSwipe:NO];
-    [self.navigationController setHidesBarsOnTap:YES];
     self.dataSource = self;
 }
 - (void)viewWillAppear:(BOOL)animated {
+    DTrace();
+    [self.navigationController setHidesBarsOnSwipe:NO];
+    [self.navigationController setHidesBarsOnTap:YES];
     self.isParserLoading = NO;
     self.galleryImageURLs = [NSMutableArray array];
     self.galleryURLString = self.galleryInfo[@"url"];
@@ -49,20 +51,34 @@
     }
     [super viewWillAppear:animated];
 }
-- (void)dealloc {
+
+- (void)viewWillDisappear:(BOOL)animated{
     DTrace();
+    [super viewWillDisappear:animated];
+}
+- (void)dealloc{
+    DTrace();
+#warning downloadtask should cancel after dealloc, but it seems not working, it casuse createNewOperation, FilesMaager fcd crash
+    [self.sessionManager.operationQueue cancelAllOperations];
+    [self.sessionManager invalidateSessionCancelingTasks:YES];
+}
+- (AFURLSessionManager *)sessionManager {
+    if(_sessionManager == nil){
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        _sessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+    }
+    return _sessionManager;
 }
 - (void)createNewOperation:(NSString *)urlString {
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
     
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     __weak APhotoPageViewController * weakSelf = self;
-    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         NSURL * docURL = [NSURL fileURLWithPath:[[[FilesManager documentFolder] fcd:weakSelf.hentaiKey] currentPath]];
         return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        DTrace();
 //        DLog(@"File downloaded to: %@", filePath);
     }];
     [downloadTask resume];
