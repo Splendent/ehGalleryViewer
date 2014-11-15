@@ -76,6 +76,9 @@
         self.bouncesZoom = YES;
         self.decelerationRate = UIScrollViewDecelerationRateFast;
         self.delegate = self;
+        UILongPressGestureRecognizer *longpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                action:@selector(handleLongPress:)];
+        [self addGestureRecognizer:longpress];
     }
     return self;
 }
@@ -240,5 +243,15 @@
 {
     return CGPointZero;
 }
-
+#pragma mark - DoubleTap to scale
+- (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
+    DTrace();
+    if(gestureRecognizer.state == UIGestureRecognizerStateBegan){
+        if(self.zoomScale > self.minimumZoomScale)
+            [self setZoomScale:self.minimumZoomScale animated:YES];
+        else
+            [self setZoomScale:self.maximumZoomScale animated:YES];
+    }
+    
+}
 @end

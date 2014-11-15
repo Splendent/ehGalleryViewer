@@ -94,11 +94,11 @@ NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder
         image = self.thumbnail;
     else
         image = self.placeHolder;
+    
     scrollView.image = image;
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view = scrollView;
 }
-
 // (this can also be defined in Info.plist via UISupportedInterfaceOrientations)
 - (NSUInteger)supportedInterfaceOrientations
 {
