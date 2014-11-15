@@ -151,7 +151,7 @@
 		016BBF0A19B94E4F0015E11E /* LightWeightPlistObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LightWeightPlistObjects.m; sourceTree = "<group>"; };
 		016BBF1319B953D40015E11E /* HentaiDownloadImageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HentaiDownloadImageOperation.h; path = HentaiDownloadCenter/HentaiDownloadImageOperation.h; sourceTree = "<group>"; };
 		016BBF1419B953D40015E11E /* HentaiDownloadImageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HentaiDownloadImageOperation.m; path = HentaiDownloadCenter/HentaiDownloadImageOperation.m; sourceTree = "<group>"; };
-		0199268519ADDB83009F814B /* e-Hentai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "e-Hentai.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0199268519ADDB83009F814B /* ehGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ehGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0199268819ADDB83009F814B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0199268A19ADDB83009F814B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0199268C19ADDB83009F814B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -428,7 +428,7 @@
 		0199268619ADDB83009F814B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0199268519ADDB83009F814B /* e-Hentai.app */,
+				0199268519ADDB83009F814B /* ehGallery.app */,
 				019926A619ADDB83009F814B /* e-HentaiTests.xctest */,
 			);
 			name = Products;
@@ -645,9 +645,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0199268419ADDB83009F814B /* e-Hentai */ = {
+		0199268419ADDB83009F814B /* ehGallery */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 019926B719ADDB83009F814B /* Build configuration list for PBXNativeTarget "e-Hentai" */;
+			buildConfigurationList = 019926B719ADDB83009F814B /* Build configuration list for PBXNativeTarget "ehGallery" */;
 			buildPhases = (
 				0199268119ADDB83009F814B /* Sources */,
 				0199268219ADDB83009F814B /* Frameworks */,
@@ -657,9 +657,9 @@
 			);
 			dependencies = (
 			);
-			name = "e-Hentai";
+			name = ehGallery;
 			productName = "e-Hentai";
-			productReference = 0199268519ADDB83009F814B /* e-Hentai.app */;
+			productReference = 0199268519ADDB83009F814B /* ehGallery.app */;
 			productType = "com.apple.product-type.application";
 		};
 		019926A519ADDB83009F814B /* e-HentaiTests */ = {
@@ -710,7 +710,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0199268419ADDB83009F814B /* e-Hentai */,
+				0199268419ADDB83009F814B /* ehGallery */,
 				019926A519ADDB83009F814B /* e-HentaiTests */,
 			);
 		};
@@ -829,7 +829,7 @@
 /* Begin PBXTargetDependency section */
 		019926AC19ADDB83009F814B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0199268419ADDB83009F814B /* e-Hentai */;
+			target = 0199268419ADDB83009F814B /* ehGallery */;
 			targetProxy = 019926AB19ADDB83009F814B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -941,7 +941,7 @@
 				INFOPLIST_FILE = "e-Hentai/e-Hentai-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-lxml2";
-				PRODUCT_NAME = "e-Hentai";
+				PRODUCT_NAME = ehGallery;
 				PROVISIONING_PROFILE = "47488aad-88d3-4cb1-b742-f6c52a7b85dd";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -965,7 +965,7 @@
 				INFOPLIST_FILE = "e-Hentai/e-Hentai-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-lxml2";
-				PRODUCT_NAME = "e-Hentai";
+				PRODUCT_NAME = ehGallery;
 				PROVISIONING_PROFILE = "47488aad-88d3-4cb1-b742-f6c52a7b85dd";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -1024,7 +1024,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		019926B719ADDB83009F814B /* Build configuration list for PBXNativeTarget "e-Hentai" */ = {
+		019926B719ADDB83009F814B /* Build configuration list for PBXNativeTarget "ehGallery" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				019926B819ADDB83009F814B /* Debug */,
