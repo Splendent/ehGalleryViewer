@@ -168,7 +168,7 @@ static NSString * const reuseIdentifier = @"genericCell";
 - (void)createGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter{
     self.isHentaiParserLoading = YES;
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
-    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"]
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
                                                                  filterArray:[self filterArray]
                                                                      baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
@@ -189,7 +189,7 @@ static NSString * const reuseIdentifier = @"genericCell";
 - (void)loadGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter {
     self.isHentaiParserLoading = YES;
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
-    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"] filterArray:[self filterArray] baseUrl:baseUrlString];
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] filterArray:[self filterArray] baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
         if(status == HentaiParserStatusSuccess) {
