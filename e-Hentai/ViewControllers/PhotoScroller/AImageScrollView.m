@@ -85,13 +85,12 @@
 - (void)setImage:(UIImage *)image
 {
     if(_image != image){
-#warning we shuld find another way to fit imge to screen
         _image = [self screenFitImage:image];
         [self displayImage:_image];
     }
 }
 - (UIImage *)screenFitImage:(UIImage *)image {
-    CGSize screenSize = [[UIScreen mainScreen] currentMode].size;
+    CGSize screenSize = [[UIScreen mainScreen] currentMode].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8
     CGSize imageSize = image.size;
     CGFloat xScale = screenSize.width/imageSize.width;
     CGFloat yScale = screenSize.height/imageSize.height;
