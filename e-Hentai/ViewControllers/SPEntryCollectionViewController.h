@@ -10,5 +10,6 @@
 
 @interface SPEntryCollectionViewController : UICollectionViewController
 @property (strong, nonatomic) IBOutlet UITextField *searchTextField;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *docSizeBarButton;
 
 @end

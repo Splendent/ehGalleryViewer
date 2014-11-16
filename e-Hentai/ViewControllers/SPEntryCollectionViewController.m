@@ -49,7 +49,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
     self.isHentaiParserLoading = NO;
-    
+    self.docSizeBarButton.title = [self sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
     [super viewWillAppear:animated];
 }
 - (void)viewWillDisappear:(BOOL)animated {
@@ -155,9 +155,55 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     [self.refreshControl beginRefreshing];
     [self createGalleryAtIndex:0 WithFilter:self.searchTextField.text];
 }
-- (void)startRefresh:(id)sender {
+- (IBAction)startRefresh:(id)sender {
     //pullToRefresh
     [self createGalleryAtIndex:0 WithFilter:self.searchTextField.text];
+}
+- (IBAction)clearFiles:(id)sender{
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    NSError *error = nil;
+    NSArray *directoryContents = [fileMgr contentsOfDirectoryAtPath:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] error:&error];
+    if (error == nil) {
+        for (NSString *path in directoryContents) {
+            NSString *fullPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:path];
+            BOOL removeSuccess = [fileMgr removeItemAtPath:fullPath error:&error];
+            if (!removeSuccess) {
+                DPLog(@"clear fail");
+            }
+        }
+    } else {
+        DPLog(@"clear fail");
+    }
+    SDImageCache *imageCache = [SDImageCache sharedImageCache];
+    [imageCache clearMemory];
+    [imageCache clearDisk];
+    
+    UIBarButtonItem * senderButton = sender;
+    senderButton.title =[self sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
+}
+-(NSString *)sizeOfFolder:(NSString *)folderPath
+{
+    NSArray *contents = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
+    NSEnumerator *contentsEnumurator = [contents objectEnumerator];
+    
+    NSString *file;
+    unsigned long long int folderSize = 0;
+    
+    while (file = [contentsEnumurator nextObject]) {
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[folderPath stringByAppendingPathComponent:file] error:nil];
+        folderSize += [[fileAttributes objectForKey:NSFileSize] intValue];
+    }
+    
+    //This line will give you formatted size from bytes ....
+    NSString *folderSizeStr = [NSByteCountFormatter stringFromByteCount:folderSize countStyle:NSByteCountFormatterCountStyleFile];
+    return folderSizeStr;
+}
+-(NSString *)sizeOfFile:(NSString *)filePath
+{
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+    NSInteger fileSize = [[fileAttributes objectForKey:NSFileSize] integerValue];
+    NSString *fileSizeStr = [NSByteCountFormatter stringFromByteCount:fileSize countStyle:NSByteCountFormatterCountStyleFile];
+    return fileSizeStr;
 }
 - (NSArray *) filterArray {
     return @[@1,@2,@3,@4,@5,@6,@7,@8,@9,@0];

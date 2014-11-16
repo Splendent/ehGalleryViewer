@@ -92,9 +92,15 @@
                     </collectionView>
                     <navigationItem key="navigationItem" id="hfI-H7-7ha">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" title="Doc Size" id="Ymv-k4-UnM">
+                            <connections>
+                                <action selector="clearFiles:" destination="2Ti-ZE-yTX" id="cBA-O4-dyC"/>
+                            </connections>
+                        </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="abP-fp-QOC">
                             <rect key="frame" x="180" y="7" width="240" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" keyboardType="webSearch" returnKeyType="search"/>
                             <connections>
@@ -109,12 +115,13 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="docSizeBarButton" destination="Ymv-k4-UnM" id="pax-U6-x3U"/>
                         <outlet property="searchTextField" destination="abP-fp-QOC" id="ivb-iw-Wye"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xmh-MA-1w9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="183" y="1241"/>
+            <point key="canvasLocation" x="276.75" y="1240.5"/>
         </scene>
         <!--Photo Page View Controller-->
         <scene sceneID="bT2-mp-7N4">
