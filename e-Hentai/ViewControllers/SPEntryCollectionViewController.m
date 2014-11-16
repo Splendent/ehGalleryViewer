@@ -25,7 +25,8 @@ NSInteger const kSPEntryCollectionViewCellLabelTag = 200;
 
 @implementation SPEntryCollectionViewController
 
-static NSString * const reuseIdentifier = @"genericCell";
+NSString * const kCollectionViewCell = @"genericCell";
+NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -35,19 +36,18 @@ static NSString * const reuseIdentifier = @"genericCell";
     // Do any additional setup after loading the view.
     
     self.galleries = [NSMutableArray array];
+    self.webPageIndex = 0;
+    [self createGalleryAtIndex:self.webPageIndex];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(startRefresh:)
                   forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:self.refreshControl];
-    
-    [self createGalleryAtIndex:0];
 }
 - (void)viewWillAppear:(BOOL)animated {
     DTrace();
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
-    self.webPageIndex = 0;
     self.isHentaiParserLoading = NO;
     
     [super viewWillAppear:animated];
@@ -67,10 +67,7 @@ static NSString * const reuseIdentifier = @"genericCell";
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
     APhotoPageViewController * photoVC = segue.destinationViewController;
     UICollectionViewCell * cell = sender;
     NSIndexPath * indexPath = [self.collectionView indexPathForCell:cell];
@@ -94,9 +91,14 @@ static NSString * const reuseIdentifier = @"genericCell";
         self.webPageIndex++;
         [self loadGalleryAtIndex:self.webPageIndex WithFilter:self.searchTextField.text];
     }
-    
+    NSString * reuseIdentifier = kCollectionViewCell;
+#warning it seems i have to use customlayout to do multiple cell size?
+//    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale;
+//    if(screenWidth > 1000) {
+//        reuseIdentifier = kCollectionViewLargeCell;
+//    }
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor greenColor];
+    cell.backgroundColor = [UIColor darkTextColor];
     UIImageView * imageView = (UIImageView *)[cell viewWithTag:kSPEntryCollectionViewCellImageTag];
     UILabel * label = (UILabel *)[cell viewWithTag:kSPEntryCollectionViewCellLabelTag];
     // Configure the cell
@@ -105,11 +107,9 @@ static NSString * const reuseIdentifier = @"genericCell";
     
     
     NSString *imgUrl = @"http://i.imgur.com/1gzbPf1.jpg"; //貓貓圖(公司用)
-    
     imgUrl = hentaiInfo[@"thumb"]; //(真的H縮圖)
-    
     [imageView sd_setImageWithURL:[NSURL URLWithString:imgUrl]
-                 placeholderImage:nil
+                 placeholderImage:[UIImage imageNamed:@"default-placeholder"]
                           options:SDWebImageRefreshCached];
     
 //    [self.cellCategory setCategoryStr:dataDict[@"category"]];
