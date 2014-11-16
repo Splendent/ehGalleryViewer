@@ -40,6 +40,8 @@ static NSString * const reuseIdentifier = @"genericCell";
     [self.refreshControl addTarget:self action:@selector(startRefresh:)
                   forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:self.refreshControl];
+    
+    [self createGalleryAtIndex:0];
 }
 - (void)viewWillAppear:(BOOL)animated {
     DTrace();
@@ -47,7 +49,6 @@ static NSString * const reuseIdentifier = @"genericCell";
     [self.navigationController setHidesBarsOnSwipe:YES];
     self.webPageIndex = 0;
     self.isHentaiParserLoading = NO;
-    [self createGalleryAtIndex:self.webPageIndex WithFilter:self.searchTextField.text];
     
     [super viewWillAppear:animated];
 }
@@ -91,7 +92,7 @@ static NSString * const reuseIdentifier = @"genericCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row + 5 > [self.galleries count] && self.isHentaiParserLoading == NO){
         self.webPageIndex++;
-        [self loadGalleryAtIndex:self.webPageIndex];
+        [self loadGalleryAtIndex:self.webPageIndex WithFilter:self.searchTextField.text];
     }
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
@@ -156,7 +157,7 @@ static NSString * const reuseIdentifier = @"genericCell";
 }
 - (void)startRefresh:(id)sender {
     //pullToRefresh
-    [self loadGalleryAtIndex:0];
+    [self createGalleryAtIndex:0 WithFilter:self.searchTextField.text];
 }
 - (NSArray *) filterArray {
     return @[@1,@2,@3,@4,@5,@6,@7,@8,@9,@0];
@@ -167,14 +168,16 @@ static NSString * const reuseIdentifier = @"genericCell";
 - (void)createGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter{
     self.isHentaiParserLoading = YES;
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
-    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:filter filterArray:[self filterArray] baseUrl:baseUrlString];
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"]
+                                                                 filterArray:[self filterArray]
+                                                                     baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
         if(status == HentaiParserStatusSuccess) {
             weakSelf.galleries = [listArray mutableCopy];
             [weakSelf.collectionView reloadData];
         } else {
-            
+            DPLog(@"search fail");
         }
         weakSelf.isHentaiParserLoading = NO;
         [weakSelf.refreshControl endRefreshing];
@@ -186,7 +189,7 @@ static NSString * const reuseIdentifier = @"genericCell";
 - (void)loadGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter {
     self.isHentaiParserLoading = YES;
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
-    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:filter filterArray:[self filterArray] baseUrl:baseUrlString];
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"] filterArray:[self filterArray] baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
         if(status == HentaiParserStatusSuccess) {
