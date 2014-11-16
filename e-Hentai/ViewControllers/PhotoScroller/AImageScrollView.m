@@ -85,9 +85,22 @@
 - (void)setImage:(UIImage *)image
 {
     if(_image != image){
-        _image = image;
+#warning we shuld find another way to fit imge to screen
+        _image = [self screenFitImage:image];
         [self displayImage:_image];
     }
+}
+- (UIImage *)screenFitImage:(UIImage *)image {
+    CGSize screenSize = [[UIScreen mainScreen] currentMode].size;
+    CGSize imageSize = image.size;
+    CGFloat xScale = screenSize.width/imageSize.width;
+    CGFloat yScale = screenSize.height/imageSize.height;
+    CGFloat fitScale = 1.0;
+    if(xScale > 1 && yScale > 1){
+        fitScale = MIN(xScale, yScale);
+        return [UIImage imageWithCGImage:image.CGImage scale:1/fitScale orientation:image.imageOrientation];
+    }
+    return image;
 }
 - (void)layoutSubviews 
 {
