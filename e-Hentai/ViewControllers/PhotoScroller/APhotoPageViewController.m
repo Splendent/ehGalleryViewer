@@ -25,6 +25,7 @@
 @property (nonatomic, assign) BOOL isParserLoading;
 @end
 
+NSInteger const kEHPagePhotoNumber = 40;
 @implementation APhotoPageViewController
 
 - (void)viewDidLoad {
@@ -107,6 +108,10 @@
 - (void)loadImageURLsForPage:(NSInteger)index {
     DPLog(@"load Page:%ld/%ld",(long)index, (long)[self.galleryImageCount integerValue]);
     self.isParserLoading = YES;
+    UIActivityIndicatorView * indicator = (UIActivityIndicatorView *)self.indidactor.customView;
+    if([indicator isAnimating]==NO){
+        [indicator startAnimating];
+    }
     __weak APhotoPageViewController * weakSelf = self;
     [HentaiParser requestImagesAtURL:self.galleryURLString atIndex:index completion: ^(HentaiParserStatus status, NSArray *images) {
         self.isParserLoading = NO;
@@ -156,11 +161,12 @@
 #pragma mark - UI Refresh methods
 - (void)refreshNavigationItemTitle {
     self.downloadedPageCount ++;
-    if(self.downloadedPageCount == [self.galleryImageCount integerValue]){
+    UIActivityIndicatorView * indicator = (UIActivityIndicatorView *)self.indidactor.customView;
+    if(self.downloadedPageCount == [self.galleryImageURLs count]){
         self.navigationItem.title = self.galleryInfo[@"title"]?self.galleryInfo[@"title"]:@"Gallery";
-        [(UIActivityIndicatorView *)self.indidactor.customView stopAnimating];
+        [indicator stopAnimating];
     } else {
-        self.navigationItem.title = [NSString stringWithFormat:@"%ld/%@",(long)self.downloadedPageCount,self.galleryImageCount];
+        self.navigationItem.title = [NSString stringWithFormat:@"D:%ld/%@",(long)self.downloadedPageCount,self.galleryImageCount];
     }
 }
 - (void)refreshPageView:(NSInteger)index animated:(BOOL)animated{
@@ -181,10 +187,10 @@
     DPLog(@"load Index:%ld",(long)index);
     UIImage *image = nil;
     if(index <= [self.galleryImageCount integerValue]) {
-        if(index + 40 >= [self.galleryImageURLs count] &&                            // preload
+        if(index + 5 >= [self.galleryImageURLs count] &&                             // preload
            self.isParserLoading == NO &&                                             // checking isLoading
            [self.galleryImageURLs count] < [self.galleryImageCount integerValue]) {  // make sure it wont infinity loading
-            [self loadImageURLsForPage:(index / 40 + 1)];
+            [self loadImageURLsForPage:(index / kEHPagePhotoNumber + 1)];
         }
         
         if(index <= [self.galleryImageURLs count]) {
