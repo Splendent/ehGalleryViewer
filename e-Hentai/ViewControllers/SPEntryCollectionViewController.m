@@ -213,8 +213,9 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 - (void)createGalleryWithFilter:(NSString *)filter{
     self.isHentaiParserLoading = YES;
     self.webPageIndex = 0;
+    NSString *correctedFilterString = [[[filter stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)self.webPageIndex];
-    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:correctedFilterString
                                                                  filterArray:[self filterArray]
                                                                      baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
@@ -234,8 +235,9 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 }
 - (void)loadGalleryAtIndex:(NSInteger)index WithFilter:(NSString *)filter {
     self.isHentaiParserLoading = YES;
+    NSString *correctedFilterString = [[[filter stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)index];
-    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:[[filter stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] filterArray:[self filterArray] baseUrl:baseUrlString];
+    NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:correctedFilterString filterArray:[self filterArray] baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
         if(status == HentaiParserStatusSuccess && [listArray count] > 0) {
