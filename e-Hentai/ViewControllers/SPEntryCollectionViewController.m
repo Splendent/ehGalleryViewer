@@ -219,7 +219,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
                                                                      baseUrl:baseUrlString];
     __weak SPEntryCollectionViewController * weakSelf = self;
     [HentaiParser requestListAtFilterUrl:filterURLString completion: ^(HentaiParserStatus status, NSArray *listArray) {
-        if(status == HentaiParserStatusSuccess) {
+        if(status == HentaiParserStatusSuccess && listArray != nil) {
             weakSelf.galleries = [listArray mutableCopy];
             [weakSelf.collectionView reloadData];
         } else {
