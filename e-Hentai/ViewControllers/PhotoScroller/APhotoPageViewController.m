@@ -17,7 +17,10 @@
 @property (nonatomic, assign) NSString * galleryImageCount;
 @property (nonatomic, strong) NSOperationQueue * galleryDownloadQueue;
 @property (nonatomic, assign) NSInteger currentPage;
+@property (nonatomic, assign) NSInteger downloadedPageCount;
 
+@property (nonatomic, strong) UIBarButtonItem * backBarButton;
+@property (nonatomic, strong) UIBarButtonItem * indidactor;
 //@property (nonatomic, strong) AFURLSessionManager * sessionManager;
 @property (nonatomic, assign) BOOL isParserLoading;
 @end
@@ -27,6 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self.navigationItem setRightBarButtonItems:@[self.backBarButton,self.indidactor]];
     self.dataSource = self;
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -34,6 +38,8 @@
     [self.navigationController setHidesBarsOnSwipe:NO];
     [self.navigationController setHidesBarsOnTap:YES];
     self.isParserLoading = NO;
+    self.downloadedPageCount = 0;
+    self.navigationItem.title = @"Loading...";
     self.galleryImageURLs = [NSMutableArray array];
     self.galleryURLString = self.galleryInfo[@"url"];
     self.galleryImageCount = self.galleryInfo[@"filecount"];
@@ -47,7 +53,6 @@
     [self refreshPageView:self.currentPage animated:NO];
     [super viewWillAppear:animated];
 }
-
 - (void)viewWillDisappear:(BOOL)animated{
     DTrace();
     [self.galleryDownloadQueue cancelAllOperations];
@@ -86,16 +91,18 @@
     newOperation.hentaiKey = self.hentaiKey;
     newOperation.delegate = self;
     [self.galleryDownloadQueue addOperation:newOperation];
-    //    NSURL *URL = [NSURL URLWithString:urlString];
-    //    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    //    __weak APhotoPageViewController * weakSelf = self;
-    //    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-    //        NSURL * docURL = [NSURL fileURLWithPath:[weakSelf galleryFolderPath]];
-    //        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
-    //    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-    //        DTrace();
-    //    }];
-    //    [downloadTask resume];
+/*
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    __weak APhotoPageViewController * weakSelf = self;
+    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+        NSURL * docURL = [NSURL fileURLWithPath:[weakSelf galleryFolderPath]];
+        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
+    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        DTrace();
+    }];
+    [downloadTask resume];
+ */
 }
 - (void)loadImageURLsForPage:(NSInteger)index {
     DPLog(@"load Page:%ld/%ld",(long)index, (long)[self.galleryImageCount integerValue]);
@@ -111,6 +118,8 @@
                 BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[weakSelf galleryFolderPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
                 if (isExist == NO) {
                     [weakSelf createNewOperation:imageURL];
+                } else {
+                    [self refreshNavigationItemTitle];
                 }
             }
         }
@@ -141,6 +150,17 @@
     }
     if(isNearByPage) {
         [self refreshPageView:self.currentPage animated:NO];
+    }
+    [self refreshNavigationItemTitle];
+}
+#pragma mark - UI Refresh methods
+- (void)refreshNavigationItemTitle {
+    self.downloadedPageCount ++;
+    if(self.downloadedPageCount == [self.galleryImageCount integerValue]){
+        self.navigationItem.title = self.galleryInfo[@"title"]?self.galleryInfo[@"title"]:@"Gallery";
+        [(UIActivityIndicatorView *)self.indidactor.customView stopAnimating];
+    } else {
+        self.navigationItem.title = [NSString stringWithFormat:@"%ld/%@",(long)self.downloadedPageCount,self.galleryImageCount];
     }
 }
 - (void)refreshPageView:(NSInteger)index animated:(BOOL)animated{
@@ -188,5 +208,27 @@
     if(vc.pageIndex + 1 >= [self.galleryImageCount integerValue] + 1)return nil;
     self.currentPage = vc.pageIndex;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1] pageIndex:vc.pageIndex + 1];
+}
+#pragma mark - navigationItem
+- (UIBarButtonItem *)backBarButton {
+    if(_backBarButton == nil){
+        _backBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
+                                                                       target:self
+                                                                       action:@selector(backButtonClicked:)];
+    }
+    return _backBarButton;
+}
+- (UIBarButtonItem *)indidactor {
+    if(_indidactor == nil){
+        UIActivityIndicatorView * indicatorView =  [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [indicatorView setHidesWhenStopped:YES];
+        [indicatorView startAnimating];
+        _indidactor = [[UIBarButtonItem alloc] initWithCustomView:indicatorView];
+    }
+    return _indidactor;
+}
+#pragma mark - IBAction
+- (IBAction)backButtonClicked:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end
