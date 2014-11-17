@@ -90,7 +90,7 @@
     }
 }
 - (UIImage *)screenFitImage:(UIImage *)image {
-    CGSize screenSize = [[UIScreen mainScreen] currentMode].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8
+    CGSize screenSize = [[UIScreen mainScreen] nativeBounds].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8,http://justsee.iteye.com/blog/2154757
     CGSize imageSize = image.size;
     CGFloat xScale = screenSize.width/imageSize.width;
     CGFloat yScale = screenSize.height/imageSize.height;
