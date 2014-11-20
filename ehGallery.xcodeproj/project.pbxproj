@@ -155,16 +155,16 @@
 		0199268819ADDB83009F814B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0199268A19ADDB83009F814B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0199268C19ADDB83009F814B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		0199269019ADDB83009F814B /* e-Hentai-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "e-Hentai-Info.plist"; sourceTree = "<group>"; };
+		0199269019ADDB83009F814B /* ehGallery-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ehGallery-Info.plist"; sourceTree = "<group>"; };
 		0199269219ADDB83009F814B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0199269419ADDB83009F814B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0199269619ADDB83009F814B /* e-Hentai-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "e-Hentai-Prefix.pch"; sourceTree = "<group>"; };
+		0199269619ADDB83009F814B /* ehGallery-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ehGallery-Prefix.pch"; sourceTree = "<group>"; };
 		0199269719ADDB83009F814B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0199269819ADDB83009F814B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		019926A019ADDB83009F814B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		019926A619ADDB83009F814B /* e-HentaiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "e-HentaiTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		019926A619ADDB83009F814B /* ehGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ehGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		019926A719ADDB83009F814B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		019926AF19ADDB83009F814B /* e-HentaiTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "e-HentaiTests-Info.plist"; sourceTree = "<group>"; };
+		019926AF19ADDB83009F814B /* ehGalleryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ehGalleryTests-Info.plist"; sourceTree = "<group>"; };
 		019926B119ADDB83009F814B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		019926B319ADDB83009F814B /* e_HentaiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = e_HentaiTests.m; sourceTree = "<group>"; };
 		0405419A19B8182400139AC9 /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
@@ -429,7 +429,7 @@
 			isa = PBXGroup;
 			children = (
 				0199268519ADDB83009F814B /* ehGallery.app */,
-				019926A619ADDB83009F814B /* e-HentaiTests.xctest */,
+				019926A619ADDB83009F814B /* ehGalleryTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -467,10 +467,10 @@
 		0199268F19ADDB83009F814B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0199269019ADDB83009F814B /* e-Hentai-Info.plist */,
+				0199269019ADDB83009F814B /* ehGallery-Info.plist */,
 				0199269119ADDB83009F814B /* InfoPlist.strings */,
 				0199269419ADDB83009F814B /* main.m */,
-				0199269619ADDB83009F814B /* e-Hentai-Prefix.pch */,
+				0199269619ADDB83009F814B /* ehGallery-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -487,7 +487,7 @@
 		019926AE19ADDB83009F814B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				019926AF19ADDB83009F814B /* e-HentaiTests-Info.plist */,
+				019926AF19ADDB83009F814B /* ehGalleryTests-Info.plist */,
 				019926B019ADDB83009F814B /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -662,9 +662,9 @@
 			productReference = 0199268519ADDB83009F814B /* ehGallery.app */;
 			productType = "com.apple.product-type.application";
 		};
-		019926A519ADDB83009F814B /* e-HentaiTests */ = {
+		019926A519ADDB83009F814B /* ehGalleryTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 019926BA19ADDB83009F814B /* Build configuration list for PBXNativeTarget "e-HentaiTests" */;
+			buildConfigurationList = 019926BA19ADDB83009F814B /* Build configuration list for PBXNativeTarget "ehGalleryTests" */;
 			buildPhases = (
 				019926A219ADDB83009F814B /* Sources */,
 				019926A319ADDB83009F814B /* Frameworks */,
@@ -675,9 +675,9 @@
 			dependencies = (
 				019926AC19ADDB83009F814B /* PBXTargetDependency */,
 			);
-			name = "e-HentaiTests";
+			name = ehGalleryTests;
 			productName = "e-HentaiTests";
-			productReference = 019926A619ADDB83009F814B /* e-HentaiTests.xctest */;
+			productReference = 019926A619ADDB83009F814B /* ehGalleryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -697,7 +697,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0199268019ADDB83009F814B /* Build configuration list for PBXProject "e-Hentai" */;
+			buildConfigurationList = 0199268019ADDB83009F814B /* Build configuration list for PBXProject "ehGallery" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -711,7 +711,7 @@
 			projectRoot = "";
 			targets = (
 				0199268419ADDB83009F814B /* ehGallery */,
-				019926A519ADDB83009F814B /* e-HentaiTests */,
+				019926A519ADDB83009F814B /* ehGalleryTests */,
 			);
 		};
 /* End PBXProject section */
@@ -932,13 +932,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "e-Hentai/e-Hentai-Prefix.pch";
+				GCC_PREFIX_HEADER = "e-Hentai/ehGallery-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"${SDKROOT}/usr/include/libxml2",
 				);
-				INFOPLIST_FILE = "e-Hentai/e-Hentai-Info.plist";
+				INFOPLIST_FILE = "e-Hentai/ehGallery-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = ehGallery;
@@ -956,13 +956,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "e-Hentai/e-Hentai-Prefix.pch";
+				GCC_PREFIX_HEADER = "e-Hentai/ehGallery-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"${SDKROOT}/usr/include/libxml2",
 				);
-				INFOPLIST_FILE = "e-Hentai/e-Hentai-Info.plist";
+				INFOPLIST_FILE = "e-Hentai/ehGallery-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = ehGallery;
@@ -987,8 +987,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "e-HentaiTests/e-HentaiTests-Info.plist";
-				PRODUCT_NAME = "e-HentaiTests";
+				INFOPLIST_FILE = "e-HentaiTests/ehGalleryTests-Info.plist";
+				PRODUCT_NAME = ehGalleryTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1005,8 +1005,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "e-Hentai/e-Hentai-Prefix.pch";
-				INFOPLIST_FILE = "e-HentaiTests/e-HentaiTests-Info.plist";
-				PRODUCT_NAME = "e-HentaiTests";
+				INFOPLIST_FILE = "e-HentaiTests/ehGalleryTests-Info.plist";
+				PRODUCT_NAME = ehGalleryTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1015,7 +1015,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0199268019ADDB83009F814B /* Build configuration list for PBXProject "e-Hentai" */ = {
+		0199268019ADDB83009F814B /* Build configuration list for PBXProject "ehGallery" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				019926B519ADDB83009F814B /* Debug */,
@@ -1033,7 +1033,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		019926BA19ADDB83009F814B /* Build configuration list for PBXNativeTarget "e-HentaiTests" */ = {
+		019926BA19ADDB83009F814B /* Build configuration list for PBXNativeTarget "ehGalleryTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				019926BB19ADDB83009F814B /* Debug */,
