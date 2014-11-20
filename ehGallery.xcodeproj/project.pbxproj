@@ -975,14 +975,14 @@
 		019926BB19ADDB83009F814B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/e-Hentai.app/e-Hentai";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ehGallery.app/ehGallery";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "e-Hentai/e-Hentai-Prefix.pch";
+				GCC_PREFIX_HEADER = "e-Hentai/ehGallery-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -997,14 +997,14 @@
 		019926BC19ADDB83009F814B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/e-Hentai.app/e-Hentai";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ehGallery.app/ehGallery";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "e-Hentai/e-Hentai-Prefix.pch";
+				GCC_PREFIX_HEADER = "e-Hentai/ehGallery-Prefix.pch";
 				INFOPLIST_FILE = "e-HentaiTests/ehGalleryTests-Info.plist";
 				PRODUCT_NAME = ehGalleryTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
