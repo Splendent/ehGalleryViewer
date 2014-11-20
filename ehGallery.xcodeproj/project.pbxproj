@@ -690,7 +690,7 @@
 				ORGANIZATIONNAME = ChilunChen;
 				TargetAttributes = {
 					0199268419ADDB83009F814B = {
-						DevelopmentTeam = EWX3D298F8;
+						DevelopmentTeam = 7J25Q4BE5E;
 					};
 					019926A519ADDB83009F814B = {
 						TestTargetID = 0199268419ADDB83009F814B;
