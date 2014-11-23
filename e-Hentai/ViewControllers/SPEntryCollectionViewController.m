@@ -50,9 +50,11 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 }
 - (void)viewWillAppear:(BOOL)animated {
     DTrace();
+    //navigationBar
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
-    [self.navigationController setToolbarHidden:YES animated:animated];
+    [self.navigationController.barHideOnSwipeGestureRecognizer addTarget:self action:@selector(hidesToolbar:)];
+    [self.navigationController setToolbarHidden:YES animated:NO];
 
     self.isHentaiParserLoading = NO;
     self.docSizeBarButton.title = [NSString sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
@@ -60,6 +62,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 }
 - (void)viewWillDisappear:(BOOL)animated {
     DTrace();
+    [self.navigationController.barHideOnSwipeGestureRecognizer removeTarget:self action:@selector(hidesToolbar:)];
     [super viewWillDisappear:animated];
 }
 - (void)dealloc {
@@ -161,6 +164,10 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     UIBarButtonItem * senderButton = sender;
     senderButton.title =[NSString sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
 }
+- (IBAction)hidesToolbar:(id)sender {
+    //hides toolbar always
+    [self.navigationController setToolbarHidden:YES];
+}
 #pragma mark - property
 - (NSArray *) filterArray {
     return @[@1,@2,@3,@4,@5,@6,@7,@8,@9,@0];
@@ -173,7 +180,6 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 - (void)createGalleryWithFilter:(NSString *)filter{
     self.isHentaiParserLoading = YES;
     self.webPageIndex = 0;
-    [self.collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
     NSString *correctedFilterString = [[[filter stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)self.webPageIndex];
     NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:correctedFilterString
@@ -184,6 +190,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
         if(status == HentaiParserStatusSuccess && listArray != nil) {
             weakSelf.galleries = [listArray mutableCopy];
             [weakSelf.collectionView reloadData];
+            [self.collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
         } else {
             DPLog(@"search fail");
         }
