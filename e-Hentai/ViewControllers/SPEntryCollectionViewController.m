@@ -22,6 +22,7 @@ NSInteger const kSPEntryCollectionViewCellLabelTag = 200;
 @property (nonatomic, strong) NSMutableArray * galleries;
 @property (nonatomic, assign) BOOL isHentaiParserLoading;
 @property (nonatomic, strong) UIRefreshControl * refreshControl;
+@property (nonatomic, strong) NSArray * filterArray;
 @end
 
 @implementation SPEntryCollectionViewController
@@ -158,6 +159,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     UIBarButtonItem * senderButton = sender;
     senderButton.title =[NSString sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
 }
+#pragma mark - property
 - (NSArray *) filterArray {
     return @[@1,@2,@3,@4,@5,@6,@7,@8,@9,@0];
 }
@@ -169,6 +171,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 - (void)createGalleryWithFilter:(NSString *)filter{
     self.isHentaiParserLoading = YES;
     self.webPageIndex = 0;
+    [self.collectionView setContentOffset:CGPointMake(0, -self.collectionView.contentInset.top) animated:YES];
     NSString *correctedFilterString = [[[filter stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]stringByReplacingOccurrencesOfString:@" " withString:@"+"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *baseUrlString = [NSString stringWithFormat:@"http://g.e-hentai.org/?page=%lu", (unsigned long)self.webPageIndex];
     NSString *filterURLString = [HentaiSearchFilter searchFilterUrlByKeyword:correctedFilterString
@@ -200,7 +203,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
             [weakSelf.galleries addObjectsFromArray:listArray];
             [weakSelf.collectionView reloadData];
         } else {
-            
+            DPLog(@"search fail");
         }
         weakSelf.isHentaiParserLoading = NO;
         [weakSelf.refreshControl endRefreshing];

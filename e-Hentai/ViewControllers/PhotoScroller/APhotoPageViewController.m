@@ -61,18 +61,8 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 - (void)dealloc{
     DTrace();
-    //#warning downloadtask should cancel after dealloc, but it seems not working, it casuse createNewOperation, FilesMaager fcd crash
-    //    [self.sessionManager.operationQueue cancelAllOperations];
-    //    [self.sessionManager invalidateSessionCancelingTasks:YES];
 }
-//- (AFURLSessionManager *)sessionManager {
-//    if(_sessionManager == nil){
-//        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-//        _sessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-//    }
-//    return _sessionManager;
-//}
-
+#pragma mark - property
 - (NSString *)hentaiKey {
     if(_hentaiKey == nil){
         NSArray *splitStrings = [self.galleryInfo[@"url"] componentsSeparatedByString:@"/"];
@@ -82,9 +72,7 @@ NSInteger const kEHPagePhotoNumber = 40;
     }
     return _hentaiKey;
 }
-- (NSString *)galleryFolderPath {
-    return [[[FilesManager documentFolder] fcd:self.hentaiKey] currentPath];
-}
+#pragma mark - download Image methods
 - (void)createNewOperation:(NSString *)urlString {
     HentaiDownloadImageOperation *newOperation = [HentaiDownloadImageOperation new];
     newOperation.downloadURLString = urlString;
@@ -92,18 +80,6 @@ NSInteger const kEHPagePhotoNumber = 40;
     newOperation.hentaiKey = self.hentaiKey;
     newOperation.delegate = self;
     [self.galleryDownloadQueue addOperation:newOperation];
-/*
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    __weak APhotoPageViewController * weakSelf = self;
-    NSURLSessionDownloadTask *downloadTask = [self.sessionManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-        NSURL * docURL = [NSURL fileURLWithPath:[weakSelf galleryFolderPath]];
-        return [docURL URLByAppendingPathComponent:[response suggestedFilename]];
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        DTrace();
-    }];
-    [downloadTask resume];
- */
 }
 - (void)loadImageURLsForPage:(NSInteger)index {
     DPLog(@"load Page:%ld/%ld",(long)index, (long)[self.galleryImageCount integerValue]);
@@ -120,7 +96,8 @@ NSInteger const kEHPagePhotoNumber = 40;
             [weakSelf.galleryImageURLs addObjectsFromArray:images];
             [weakSelf refreshPageView:weakSelf.currentPage animated:NO];
             for (NSString *imageURL in images) {
-                BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[[weakSelf galleryFolderPath] stringByAppendingPathComponent:[imageURL lastPathComponent]]];
+                NSString * galleryFolderPath = [[[FilesManager documentFolder] fcd:self.hentaiKey] currentPath];
+                BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[galleryFolderPath stringByAppendingPathComponent:[imageURL lastPathComponent]]];
                 if (isExist == NO) {
                     [weakSelf createNewOperation:imageURL];
                 } else {
@@ -201,7 +178,6 @@ NSInteger const kEHPagePhotoNumber = 40;
     }
     return image;
 }
-#warning photo should reload after download success
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
     if(vc.pageIndex - 1 <= 0)return nil;
