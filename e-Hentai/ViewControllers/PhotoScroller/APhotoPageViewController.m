@@ -36,16 +36,25 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 - (void)viewWillAppear:(BOOL)animated {
     DTrace();
+    //NavigationBar
     [self.navigationController setHidesBarsOnSwipe:NO];
     [self.navigationController setHidesBarsOnTap:YES];
+    [self.navigationController setToolbarHidden:self.navigationController.navigationBarHidden animated:animated];
+    [self.navigationController.barHideOnTapGestureRecognizer addTarget:self action:@selector(hideToolbar:)];
+//    [self.navigationController.toolbar setTranslucent:YES];
+
+    self.navigationItem.title = @"Loading...";
+    //Parse,Download Status
     self.isParserLoading = NO;
     self.downloadedPageCount = 0;
-    self.navigationItem.title = @"Loading...";
+    //Gallery infos
     self.galleryImageURLs = [NSMutableArray array];
     self.galleryURLString = self.galleryInfo[@"url"];
     self.galleryImageCount = self.galleryInfo[@"filecount"];
+    //DownloadQueue setup
     self.galleryDownloadQueue = [NSOperationQueue new];
     [self.galleryDownloadQueue setMaxConcurrentOperationCount:5];
+    
     [self loadImageURLsForPage:0];
     
     // kick things off by making the first page
@@ -57,6 +66,7 @@ NSInteger const kEHPagePhotoNumber = 40;
 - (void)viewWillDisappear:(BOOL)animated{
     DTrace();
     [self.galleryDownloadQueue cancelAllOperations];
+    [self.navigationController.barHideOnTapGestureRecognizer removeTarget:self action:@selector(hideToolbar:)];
     [super viewWillDisappear:animated];
 }
 - (void)dealloc{
@@ -210,6 +220,9 @@ NSInteger const kEHPagePhotoNumber = 40;
     return _indidactor;
 }
 #pragma mark - IBAction
+- (IBAction)hideToolbar:(id)sender {
+    [self.navigationController setToolbarHidden:!self.navigationController.toolbar.hidden animated:YES];
+}
 - (IBAction)backButtonClicked:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }

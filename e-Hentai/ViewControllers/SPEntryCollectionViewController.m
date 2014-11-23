@@ -52,6 +52,8 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     DTrace();
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
+    [self.navigationController setToolbarHidden:YES animated:animated];
+
     self.isHentaiParserLoading = NO;
     self.docSizeBarButton.title = [NSString sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
     [super viewWillAppear:animated];
