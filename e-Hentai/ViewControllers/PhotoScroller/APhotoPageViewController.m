@@ -18,11 +18,16 @@
 @property (nonatomic, strong) NSOperationQueue * galleryDownloadQueue;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, assign) NSInteger downloadedPageCount;
+@property (nonatomic, assign) BOOL isParserLoading;
 
+//navigationItems
 @property (nonatomic, strong) UIBarButtonItem * backBarButton;
 @property (nonatomic, strong) UIBarButtonItem * indidactor;
-//@property (nonatomic, strong) AFURLSessionManager * sessionManager;
-@property (nonatomic, assign) BOOL isParserLoading;
+//toolbarItems
+@property (nonatomic, strong) UIBarButtonItem * pageSlider;
+@property (nonatomic, strong) UIBarButtonItem * scaleModeBarButton;
+@property (nonatomic, strong) UIBarButtonItem * currentPageBarButton;
+
 @end
 
 NSInteger const kEHPagePhotoNumber = 40;
@@ -32,6 +37,7 @@ NSInteger const kEHPagePhotoNumber = 40;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.navigationItem setRightBarButtonItems:@[self.backBarButton,self.indidactor]];
+    [self setToolbarItems:@[[self fixedSpace],self.scaleModeBarButton,[self flexiableSpace],self.currentPageBarButton,[self flexiableSpace],self.pageSlider,[self fixedSpace]]];
     self.dataSource = self;
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -81,6 +87,12 @@ NSInteger const kEHPagePhotoNumber = 40;
         _hentaiKey = [checkHentaiKey stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
     }
     return _hentaiKey;
+}
+- (void)setCurrentPage:(NSInteger)currentPage {
+    if(_currentPage != currentPage) {
+        _currentPage = currentPage;
+        [_currentPageBarButton setTitle:[NSString stringWithFormat:@"%02zd/%02zd",_currentPage,[self.galleryImageCount integerValue]]];
+    }
 }
 #pragma mark - download Image methods
 - (void)createNewOperation:(NSString *)urlString {
@@ -158,11 +170,11 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 - (void)refreshPageView:(NSInteger)index animated:(BOOL)animated{
     DTrace();
-    APhotoViewController *currentPage = [APhotoViewController photoViewControllerForImage:[self imageForIndex:index]
+    APhotoViewController *currentPageVC = [APhotoViewController photoViewControllerForImage:[self imageForIndex:index]
                                                                                 pageIndex:index];
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [self setViewControllers:@[currentPage]
+        [self setViewControllers:@[currentPageVC]
                        direction:UIPageViewControllerNavigationDirectionForward
                         animated:animated
                       completion:NULL];
@@ -190,14 +202,20 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(APhotoViewController *)vc
 {
-    if(vc.pageIndex - 1 <= 0)return nil;
+    if(vc.pageIndex - 1 <= 0){
+        self.currentPage = 1;
+        return nil;
+    }
     self.currentPage = vc.pageIndex;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex - 1] pageIndex:vc.pageIndex - 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(APhotoViewController *)vc
 {
-    if(vc.pageIndex + 1 >= [self.galleryImageCount integerValue] + 1)return nil;
+    if(vc.pageIndex + 1 >= [self.galleryImageCount integerValue] + 1){
+        self.currentPage = [self.galleryImageCount integerValue];
+        return nil;
+    }
     self.currentPage = vc.pageIndex;
     return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1] pageIndex:vc.pageIndex + 1];
 }
@@ -206,7 +224,7 @@ NSInteger const kEHPagePhotoNumber = 40;
     if(_backBarButton == nil){
         _backBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
                                                                        target:self
-                                                                       action:@selector(backButtonClicked:)];
+                                                                       action:@selector(backBarButtonClicked:)];
     }
     return _backBarButton;
 }
@@ -219,11 +237,49 @@ NSInteger const kEHPagePhotoNumber = 40;
     }
     return _indidactor;
 }
-#pragma mark - IBAction
-- (IBAction)hideToolbar:(id)sender {
-    [self.navigationController setToolbarHidden:!self.navigationController.toolbar.hidden animated:YES];
+- (UIBarButtonItem *)scaleModeBarButton {
+    if(_scaleModeBarButton == nil) {
+        _scaleModeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"H"
+                                                               style:UIBarButtonItemStylePlain
+                                                              target:self
+                                                              action:@selector(scaleModeBarButtonClicked:)];
+    }
+    return _scaleModeBarButton;
 }
-- (IBAction)backButtonClicked:(id)sender{
+- (UIBarButtonItem *)pageSlider {
+    if(_pageSlider == nil) {
+        CGFloat toolbarWidth = [self.navigationController.toolbar frame].size.width;
+        UISlider * slider = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, toolbarWidth*.6, 40)];
+        _pageSlider = [[UIBarButtonItem alloc] initWithCustomView:slider];
+    }
+    return _pageSlider;
+}
+- (UIBarButtonItem *)currentPageBarButton {
+    if(_currentPageBarButton == nil) {
+        _currentPageBarButton = [[UIBarButtonItem alloc] initWithTitle:@"0/0" style:UIBarButtonItemStylePlain target:nil action:nil];
+    }
+    return _currentPageBarButton;
+}
+- (UIBarButtonItem *)flexiableSpace {
+    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+}
+- (UIBarButtonItem *)fixedSpace {
+    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+}
+#pragma mark - IBAction
+- (IBAction)backBarButtonClicked:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
+}
+- (IBAction)scaleModeBarButtonClicked:(id)sender {
+    UIBarButtonItem * btn = sender;
+    if ([btn.title isEqualToString:@"H"]) {
+        [btn setTitle:@"W"];
+    } else if ([btn.title isEqualToString:@"W"]) {
+        [btn setTitle:@"L"];
+    } else if ([btn.title isEqualToString:@"L"]) {
+        [btn setTitle:@"H"];
+    } else {
+        
+    }
 }
 @end
