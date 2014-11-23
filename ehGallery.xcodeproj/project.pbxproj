@@ -87,6 +87,7 @@
 		62AAAF0E1A0F6102007F9981 /* APhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF0A1A0F6102007F9981 /* APhotoViewController.m */; };
 		62AAAF121A0F610A007F9981 /* SPEntryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF111A0F610A007F9981 /* SPEntryCollectionViewController.m */; };
 		62AAAF161A0F6305007F9981 /* APhotoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62AAAF151A0F6305007F9981 /* APhotoPageViewController.m */; };
+		62C1FB151A21B9C800E5EA70 /* NSString+FileSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 62C1FB141A21B9C800E5EA70 /* NSString+FileSize.m */; };
 		9F9C3B5719D82DBA007CFF81 /* HentaiFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F9C3B5419D82DBA007CFF81 /* HentaiFilterView.m */; };
 		9F9C3B5819D82DBA007CFF81 /* HentaiSearchFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F9C3B5619D82DBA007CFF81 /* HentaiSearchFilter.m */; };
 /* End PBXBuildFile section */
@@ -252,6 +253,8 @@
 		62AAAF111A0F610A007F9981 /* SPEntryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPEntryCollectionViewController.m; path = ViewControllers/SPEntryCollectionViewController.m; sourceTree = "<group>"; };
 		62AAAF141A0F6305007F9981 /* APhotoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APhotoPageViewController.h; path = ViewControllers/PhotoScroller/APhotoPageViewController.h; sourceTree = "<group>"; };
 		62AAAF151A0F6305007F9981 /* APhotoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APhotoPageViewController.m; path = ViewControllers/PhotoScroller/APhotoPageViewController.m; sourceTree = "<group>"; };
+		62C1FB131A21B9C800E5EA70 /* NSString+FileSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+FileSize.h"; path = "ViewControllers/NSString+FileSize.h"; sourceTree = "<group>"; };
+		62C1FB141A21B9C800E5EA70 /* NSString+FileSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+FileSize.m"; path = "ViewControllers/NSString+FileSize.m"; sourceTree = "<group>"; };
 		9F9C3B5319D82DBA007CFF81 /* HentaiFilterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HentaiFilterView.h; sourceTree = "<group>"; };
 		9F9C3B5419D82DBA007CFF81 /* HentaiFilterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HentaiFilterView.m; sourceTree = "<group>"; };
 		9F9C3B5519D82DBA007CFF81 /* HentaiSearchFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HentaiSearchFilter.h; sourceTree = "<group>"; };
@@ -451,6 +454,8 @@
 				6231865F1A0BC04D0018E3CB /* Main.storyboard */,
 				62AAAF101A0F610A007F9981 /* SPEntryCollectionViewController.h */,
 				62AAAF111A0F610A007F9981 /* SPEntryCollectionViewController.m */,
+				62C1FB131A21B9C800E5EA70 /* NSString+FileSize.h */,
+				62C1FB141A21B9C800E5EA70 /* NSString+FileSize.m */,
 				62AAAEFD1A0F5FB2007F9981 /* PhotoScoller */,
 				6231865E1A0BBE430018E3CB /* HentaiCore */,
 				0150033619B6E5E90055F47D /* ThirdParty */,
@@ -810,6 +815,7 @@
 				040541BF19B8182400139AC9 /* SDWebImageDecoder.m in Sources */,
 				040541CA19B8182400139AC9 /* UIView+WebCacheOperation.m in Sources */,
 				04376DFC19B96B76001B1599 /* GalleryCell.m in Sources */,
+				62C1FB151A21B9C800E5EA70 /* NSString+FileSize.m in Sources */,
 				016A359F19B6FB8A00E3371A /* HentaiParser.m in Sources */,
 				62A52BCC1A15036D0082157E /* UIImageView+AFNetworking.m in Sources */,
 				62A52BAF1A1503460082157E /* AFHTTPSessionManager.m in Sources */,

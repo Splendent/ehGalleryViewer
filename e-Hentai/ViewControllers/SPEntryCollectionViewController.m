@@ -8,6 +8,7 @@
 
 #import "SPEntryCollectionViewController.h"
 #import "APhotoPageViewController.h"
+#import "NSString+FileSize.h"
 //HentaiCore
 #import "HentaiSearchFilter.h"
 #import "HentaiFilterView.h"
@@ -35,9 +36,11 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     
     // Do any additional setup after loading the view.
     
+    //setup galleries
     self.galleries = [NSMutableArray array];
     [self createGallery];
     
+    //setup refresControl
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl setTintColor:[UIColor whiteColor]];
     [self.refreshControl addTarget:self action:@selector(startRefresh:)
@@ -49,7 +52,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     [self.navigationController setHidesBarsOnTap:NO];
     [self.navigationController setHidesBarsOnSwipe:YES];
     self.isHentaiParserLoading = NO;
-    self.docSizeBarButton.title = [self sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
+    self.docSizeBarButton.title = [NSString sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
     [super viewWillAppear:animated];
 }
 - (void)viewWillDisappear:(BOOL)animated {
@@ -119,36 +122,8 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
 }
 
 #pragma mark <UICollectionViewDelegate>
-
-/*
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-*/
-
-/*
-// Uncomment this method to specify if the specified item should be selected
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-*/
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
-}
- */
-#pragma mark -
+//nothing here
+#pragma mark - IBAction
 - (IBAction)search:(id)sender {
 #warning should do something to prevent multiple search
     //textFieldEndAndExit or click searchBarButton
@@ -160,6 +135,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     [self createGalleryWithFilter:self.searchTextField.text];
 }
 - (IBAction)clearFiles:(id)sender{
+    //clear document folder
     NSFileManager *fileMgr = [NSFileManager defaultManager];
     NSError *error = nil;
     NSArray *directoryContents = [fileMgr contentsOfDirectoryAtPath:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] error:&error];
@@ -174,40 +150,19 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     } else {
         DPLog(@"clear fail");
     }
+    
     SDImageCache *imageCache = [SDImageCache sharedImageCache];
     [imageCache clearMemory];
     [imageCache clearDisk];
     
     UIBarButtonItem * senderButton = sender;
-    senderButton.title =[self sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
-}
--(NSString *)sizeOfFolder:(NSString *)folderPath
-{
-    NSArray *contents = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
-    NSEnumerator *contentsEnumurator = [contents objectEnumerator];
-    
-    NSString *file;
-    unsigned long long int folderSize = 0;
-    
-    while (file = [contentsEnumurator nextObject]) {
-        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[folderPath stringByAppendingPathComponent:file] error:nil];
-        folderSize += [[fileAttributes objectForKey:NSFileSize] intValue];
-    }
-    
-    //This line will give you formatted size from bytes ....
-    NSString *folderSizeStr = [NSByteCountFormatter stringFromByteCount:folderSize countStyle:NSByteCountFormatterCountStyleFile];
-    return folderSizeStr;
-}
--(NSString *)sizeOfFile:(NSString *)filePath
-{
-    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-    NSInteger fileSize = [[fileAttributes objectForKey:NSFileSize] integerValue];
-    NSString *fileSizeStr = [NSByteCountFormatter stringFromByteCount:fileSize countStyle:NSByteCountFormatterCountStyleFile];
-    return fileSizeStr;
+    senderButton.title =[NSString sizeOfFolder:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]];
 }
 - (NSArray *) filterArray {
     return @[@1,@2,@3,@4,@5,@6,@7,@8,@9,@0];
 }
+
+#pragma mark - gallery method
 - (void)createGallery{
     [self createGalleryWithFilter:@""];
 }
