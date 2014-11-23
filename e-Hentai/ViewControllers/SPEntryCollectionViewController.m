@@ -39,6 +39,7 @@ NSString * const kCollectionViewLargeCell = @"genericLargeCell";
     [self createGallery];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl setTintColor:[UIColor whiteColor]];
     [self.refreshControl addTarget:self action:@selector(startRefresh:)
                   forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:self.refreshControl];
