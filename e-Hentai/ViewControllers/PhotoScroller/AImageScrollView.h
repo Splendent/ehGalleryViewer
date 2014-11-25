@@ -47,7 +47,15 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, AImageScrollViewScaleMode) {
+    AImageScrollViewScaleModeHeight = 1,
+    AImageScrollViewScaleModeWidth = 2,
+    AImageScrollViewScaleModeAuto = 3,
+    AImageScrollViewScaleModeNormal = 4,
+};
+
 @interface AImageScrollView : UIScrollView
+@property (nonatomic, assign) AImageScrollViewScaleMode scaleMode;
 @property (nonatomic, strong) UIImage * image;
 @property (nonatomic, assign) BOOL isAlwaysEnlarge;
 @end

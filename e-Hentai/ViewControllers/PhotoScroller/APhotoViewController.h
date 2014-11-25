@@ -46,13 +46,14 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "AImageScrollView.h"
 
 @interface APhotoViewController : UIViewController
 
 @property (nonatomic, strong) UIImage * thumbnail;
 @property (nonatomic, strong) UIImage * placeHolder;
 
-+ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex;
++ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex scaleMode:(AImageScrollViewScaleMode)scaleMode;
 - (NSInteger)pageIndex;
-
+- (AImageScrollViewScaleMode)scaleMode;
 @end

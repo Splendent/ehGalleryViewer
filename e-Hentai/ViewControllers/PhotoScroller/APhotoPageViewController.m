@@ -19,6 +19,8 @@
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, assign) NSInteger downloadedPageCount;
 @property (nonatomic, assign) BOOL isParserLoading;
+@property (nonatomic, strong) NSDictionary * scaleModeToTitleDic;
+
 
 //navigationItems
 @property (nonatomic, strong) UIBarButtonItem * backBarButton;
@@ -38,6 +40,11 @@ NSInteger const kEHPagePhotoNumber = 40;
     // Do any additional setup after loading the view.
     [self.navigationItem setRightBarButtonItems:@[self.backBarButton,self.indidactor]];
     [self setToolbarItems:@[[self fixedSpace],self.scaleModeBarButton,[self flexiableSpace],self.currentPageBarButton,[self flexiableSpace],self.pageSlider,[self fixedSpace]]];
+    self.scaleModeToTitleDic = @{@"W":@(AImageScrollViewScaleModeWidth),
+                                 @"H":@(AImageScrollViewScaleModeHeight),
+                                 @"A":@(AImageScrollViewScaleModeAuto),
+                                 @"N":@(AImageScrollViewScaleModeNormal)
+                                 };
     self.dataSource = self;
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -47,7 +54,7 @@ NSInteger const kEHPagePhotoNumber = 40;
     [self.navigationController setHidesBarsOnTap:YES];
     [self.navigationController setToolbarHidden:self.navigationController.navigationBarHidden animated:animated];
     self.navigationItem.title = @"Loading...";
-//    [self.navigationController.toolbar setTranslucent:YES];
+    //    [self.navigationController.toolbar setTranslucent:YES];
     
     //Parse,Download Status
     self.isParserLoading = NO;
@@ -171,7 +178,7 @@ NSInteger const kEHPagePhotoNumber = 40;
 - (void)refreshPageView:(NSInteger)index animated:(BOOL)animated{
     DTrace();
     APhotoViewController *currentPageVC = [APhotoViewController photoViewControllerForImage:[self imageForIndex:index]
-                                                                                pageIndex:index];
+                                                                                  pageIndex:index scaleMode:[self scaleMode]];
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [self setViewControllers:@[currentPageVC]
@@ -181,6 +188,9 @@ NSInteger const kEHPagePhotoNumber = 40;
     });
 }
 #pragma mark - UIPageViewControllerDataSource
+- (AImageScrollViewScaleMode)scaleMode {
+    return (AImageScrollViewScaleMode)self.scaleModeToTitleDic[self.scaleModeBarButton.title];
+}
 - (UIImage *)imageForIndex:(NSInteger)index
 {
     DPLog(@"load Index:%ld",(long)index);
@@ -207,7 +217,8 @@ NSInteger const kEHPagePhotoNumber = 40;
         return nil;
     }
     self.currentPage = vc.pageIndex;
-    return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex - 1] pageIndex:vc.pageIndex - 1];
+    return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex - 1]
+                                                   pageIndex:vc.pageIndex - 1 scaleMode:[self scaleMode]];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(APhotoViewController *)vc
@@ -217,7 +228,8 @@ NSInteger const kEHPagePhotoNumber = 40;
         return nil;
     }
     self.currentPage = vc.pageIndex;
-    return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1] pageIndex:vc.pageIndex + 1];
+    return [APhotoViewController photoViewControllerForImage:[self imageForIndex:vc.pageIndex + 1]
+                                                   pageIndex:vc.pageIndex + 1 scaleMode:[self scaleMode]];
 }
 #pragma mark - navigation/toolbar Items
 - (UIBarButtonItem *)backBarButton {
@@ -275,11 +287,14 @@ NSInteger const kEHPagePhotoNumber = 40;
     if ([btn.title isEqualToString:@"H"]) {
         [btn setTitle:@"W"];
     } else if ([btn.title isEqualToString:@"W"]) {
-        [btn setTitle:@"L"];
-    } else if ([btn.title isEqualToString:@"L"]) {
+        [btn setTitle:@"A"];
+    } else if ([btn.title isEqualToString:@"A"]) {
+        [btn setTitle:@"N"];
+    } else if ([btn.title isEqualToString:@"N"]) {
         [btn setTitle:@"H"];
     } else {
-        
+        DPLog(@"Magic scale, you must keyed something wrong");
     }
+    [self refreshPageView:self.currentPage animated:NO];
 }
 @end

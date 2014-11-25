@@ -85,18 +85,36 @@
 - (void)setImage:(UIImage *)image
 {
     if(_image != image){
-        _image = [self screenFitImage:image];
+        _image = [self scaleFitImage:image];
         [self displayImage:_image];
     }
 }
-- (UIImage *)screenFitImage:(UIImage *)image {
-    CGSize screenSize = [[UIScreen mainScreen] nativeBounds].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8,http://justsee.iteye.com/blog/2154757
+- (UIImage *)scaleFitImage:(UIImage *)image {
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8,http://justsee.iteye.com/blog/2154757
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
     CGSize imageSize = image.size;
-    CGFloat xScale = screenSize.width/imageSize.width;
-    CGFloat yScale = screenSize.height/imageSize.height;
+    
+    CGFloat xScale = screenSize.width*screenScale/imageSize.width;
+    CGFloat yScale = screenSize.height*screenScale/imageSize.height;
     CGFloat fitScale = 1.0;
-    if(xScale > 1 && yScale > 1){
-        fitScale = MIN(xScale, yScale);
+    if(xScale > 1 || yScale > 1){
+        switch (self.scaleMode) {
+            case AImageScrollViewScaleModeAuto:
+                fitScale = MAX(xScale, yScale);
+                break;
+            case AImageScrollViewScaleModeHeight:
+                fitScale = MAX(1, yScale);
+                break;
+            case AImageScrollViewScaleModeWidth:
+                fitScale = MAX(1, xScale);
+                break;
+            case AImageScrollViewScaleModeNormal:
+                fitScale = MIN(xScale, yScale);
+                break;
+            default:
+                fitScale = MIN(xScale, yScale);
+                break;
+        }
         return [UIImage imageWithCGImage:image.CGImage scale:1/fitScale orientation:image.imageOrientation];
     }
     return image;

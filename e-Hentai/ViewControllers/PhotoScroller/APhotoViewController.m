@@ -46,27 +46,27 @@
  */
 
 #import "APhotoViewController.h"
-#import "AImageScrollView.h"
 
 NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder";
 
 @interface APhotoViewController ()
 {
     NSUInteger _pageIndex;
+    AImageScrollViewScaleMode _scaleMode;
 }
 @property (nonatomic, strong) UIImage * image;
 @end
 
 @implementation APhotoViewController
-+ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex
++ (APhotoViewController *)photoViewControllerForImage:(UIImage *)image pageIndex:(NSInteger)pageIndex scaleMode:(AImageScrollViewScaleMode)scaleMode
 {
     if (pageIndex)
     {
-        return [[self alloc] initWithImage:image pageIndex:pageIndex];
+        return [[self alloc] initWithImage:image pageIndex:pageIndex scaleMode:scaleMode];
     }
     return nil;
 }
-- (id)initWithImage:(UIImage *)image pageIndex:(NSInteger)pageIndex
+- (id)initWithImage:(UIImage *)image pageIndex:(NSInteger)pageIndex scaleMode:(AImageScrollViewScaleMode)scaleMode
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self)
@@ -75,6 +75,7 @@ NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder
         _placeHolder = [UIImage imageNamed:kAPhotoViewControllerDefaultPlaceholder];
         _image = image;
         _pageIndex = pageIndex;
+        _scaleMode = scaleMode;
     }
     return self;
 }
@@ -94,6 +95,7 @@ NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder
         image = self.thumbnail;
     else
         image = self.placeHolder;
+    scrollView.scaleMode = AImageScrollViewScaleModeWidth;
     scrollView.isAlwaysEnlarge = YES;
     scrollView.image = image;
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
