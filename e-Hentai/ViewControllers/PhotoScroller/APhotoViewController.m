@@ -94,7 +94,7 @@ NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder
         image = self.thumbnail;
     else
         image = self.placeHolder;
-    
+    scrollView.isAlwaysEnlarge = YES;
     scrollView.image = image;
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view = scrollView;

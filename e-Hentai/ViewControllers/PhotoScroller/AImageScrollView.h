@@ -49,5 +49,5 @@
 
 @interface AImageScrollView : UIScrollView
 @property (nonatomic, strong) UIImage * image;
-
+@property (nonatomic, assign) BOOL isAlwaysEnlarge;
 @end

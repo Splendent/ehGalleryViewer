@@ -194,8 +194,8 @@
     if (minScale > maxScale) {
         minScale = maxScale;
     }
-        
-    self.maximumZoomScale = maxScale;
+    
+    self.maximumZoomScale = self.isAlwaysEnlarge?maxScale/.8:maxScale; //if always enlarge -> enlarge 125%
     self.minimumZoomScale = minScale;
 }
 
