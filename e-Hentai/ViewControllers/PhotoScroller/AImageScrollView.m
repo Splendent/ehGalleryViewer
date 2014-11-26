@@ -89,37 +89,7 @@
         [self displayImage:_image];
     }
 }
-- (UIImage *)scaleFitImage:(UIImage *)image {
-    CGSize screenSize = [[UIScreen mainScreen] bounds].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8,http://justsee.iteye.com/blog/2154757
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
-    CGSize imageSize = image.size;
-    
-    CGFloat xScale = screenSize.width*screenScale/imageSize.width;
-    CGFloat yScale = screenSize.height*screenScale/imageSize.height;
-    CGFloat fitScale = 1.0;
-    if(xScale > 1 || yScale > 1){
-        switch (self.scaleMode) {
-            case AImageScrollViewScaleModeAuto:
-                fitScale = MAX(xScale, yScale);
-                break;
-            case AImageScrollViewScaleModeHeight:
-                fitScale = MAX(1, yScale);
-                break;
-            case AImageScrollViewScaleModeWidth:
-                fitScale = MAX(1, xScale);
-                break;
-            case AImageScrollViewScaleModeNormal:
-                fitScale = MIN(xScale, yScale);
-                break;
-            default:
-                fitScale = MIN(xScale, yScale);
-                break;
-        }
-        return [UIImage imageWithCGImage:image.CGImage scale:1/fitScale orientation:image.imageOrientation];
-    }
-    return image;
-}
-- (void)layoutSubviews 
+- (void)layoutSubviews
 {
     [super layoutSubviews];
     
@@ -188,7 +158,7 @@
     _imageSize = imageSize;
     self.contentSize = imageSize;
     [self setMaxMinZoomScalesForCurrentBounds];
-    self.zoomScale = self.minimumZoomScale;
+    self.zoomScale = [self zoomScaleForMode];
 }
 
 - (void)setMaxMinZoomScalesForCurrentBounds
@@ -283,5 +253,66 @@
             [self setZoomScale:self.maximumZoomScale animated:YES];
     }
     
+}
+#pragma mark - scale mode
+
+- (UIImage *)scaleFitImage:(UIImage *)image {
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size; //[UIScreen mainScreen].bounds.size is orientation-dependent in iOS8,http://justsee.iteye.com/blog/2154757
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
+    CGSize imageSize = image.size;
+    
+    CGFloat xScale = screenSize.width*screenScale/imageSize.width;
+    CGFloat yScale = screenSize.height*screenScale/imageSize.height;
+    CGFloat fitScale = 1.0;
+    if(xScale > 1 || yScale > 1){
+//        switch (self.scaleMode) {
+//            case AImageScrollViewScaleModeAuto:
+//                fitScale = MAX(xScale, yScale);
+//                break;
+//            case AImageScrollViewScaleModeHeight:
+//                fitScale = MAX(1, yScale);
+//                break;
+//            case AImageScrollViewScaleModeWidth:
+//                fitScale = MAX(1, xScale);
+//                break;
+//            case AImageScrollViewScaleModeNormal:
+//                fitScale = MIN(xScale, yScale);
+//                break;
+//            default:
+//                fitScale = MIN(xScale, yScale);
+//                break;
+//        }
+        fitScale = MAX(xScale, yScale);
+        return [UIImage imageWithCGImage:image.CGImage scale:1/fitScale orientation:image.imageOrientation];
+    }
+    return image;
+}
+- (CGFloat)zoomScaleForMode{
+    CGFloat zoomScale = 1.0;
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+    switch (self.scaleMode) {
+        case AImageScrollViewScaleModeAuto:
+            zoomScale = self.maximumZoomScale;
+            break;
+        case AImageScrollViewScaleModeHeight:
+            if(screenSize.height>screenSize.width)
+                zoomScale = self.contentSize.width/screenSize.width;
+            else
+                zoomScale = self.minimumZoomScale;
+            break;
+        case AImageScrollViewScaleModeWidth:
+            if(screenSize.height>screenSize.width)
+                zoomScale = self.minimumZoomScale;
+            else
+                zoomScale = self.contentSize.width/screenSize.height;
+            break;
+        case AImageScrollViewScaleModeNormal:
+            zoomScale = self.minimumZoomScale;
+            break;
+        default:
+            zoomScale = self.minimumZoomScale;
+            break;
+    }
+    return zoomScale;
 }
 @end
