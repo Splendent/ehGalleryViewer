@@ -99,15 +99,33 @@ NSInteger const kEHPagePhotoNumber = 40;
     if(_currentPage != currentPage) {
         _currentPage = currentPage;
         [_currentPageBarButton setTitle:[NSString stringWithFormat:@"%02zd/%02zd",_currentPage,[self.galleryImageCount integerValue]]];
+        [self updateOperationPriorityForPage:currentPage];
     }
 }
 #pragma mark - download Image methods
-- (void)createNewOperation:(NSString *)urlString {
+- (void)updateOperationPriorityForPage:(NSInteger)page {
+    if([self.galleryImageURLs count] >= page - 1 && [self.galleryImageURLs count] > 0){
+        NSString * operationName = [self.galleryImageURLs[page - 1] lastPathComponent];
+        for(HentaiDownloadImageOperation * operation in [self.galleryDownloadQueue operations]){
+            if([operation.name isEqualToString:operationName]){
+                DPLog(@"set %@ to HiPriority",operationName);
+                [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+            } else {
+                if([operation queuePriority] != NSOperationQueuePriorityVeryLow){
+                    [operation setQueuePriority:NSOperationQueuePriorityVeryLow];
+                }
+            }
+        }
+    }
+}
+- (void)createNewOperation:(NSString *)urlString priority:(NSOperationQueuePriority)priority{
     HentaiDownloadImageOperation *newOperation = [HentaiDownloadImageOperation new];
     newOperation.downloadURLString = urlString;
     newOperation.isCacheOperation = NO;
     newOperation.hentaiKey = self.hentaiKey;
     newOperation.delegate = self;
+    newOperation.name = [urlString lastPathComponent];
+    [newOperation setQueuePriority:priority];
     [self.galleryDownloadQueue addOperation:newOperation];
 }
 - (void)loadImageURLsForPage:(NSInteger)index {
@@ -128,7 +146,10 @@ NSInteger const kEHPagePhotoNumber = 40;
                 NSString * galleryFolderPath = [[[FilesManager documentFolder] fcd:self.hentaiKey] currentPath];
                 BOOL isExist = [[NSFileManager defaultManager] isReadableFileAtPath:[galleryFolderPath stringByAppendingPathComponent:[imageURL lastPathComponent]]];
                 if (isExist == NO) {
-                    [weakSelf createNewOperation:imageURL];
+                    if([images indexOfObject:imageURL] == self.currentPage - 1)
+                        [weakSelf createNewOperation:imageURL priority:NSOperationQueuePriorityVeryHigh];
+                    else
+                        [weakSelf createNewOperation:imageURL priority:NSOperationQueuePriorityVeryLow];
                 } else {
                     [self refreshNavigationItemTitle];
                 }
