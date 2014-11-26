@@ -251,7 +251,7 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 - (UIBarButtonItem *)scaleModeBarButton {
     if(_scaleModeBarButton == nil) {
-        _scaleModeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"H"
+        _scaleModeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"N"
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(scaleModeBarButtonClicked:)];
