@@ -189,7 +189,7 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 #pragma mark - UIPageViewControllerDataSource
 - (AImageScrollViewScaleMode)scaleMode {
-    return (AImageScrollViewScaleMode)self.scaleModeToTitleDic[self.scaleModeBarButton.title];
+    return [(NSNumber *)self.scaleModeToTitleDic[self.scaleModeBarButton.title] unsignedLongValue];
 }
 - (UIImage *)imageForIndex:(NSInteger)index
 {

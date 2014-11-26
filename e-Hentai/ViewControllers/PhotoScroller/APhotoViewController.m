@@ -84,7 +84,10 @@ NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder
 {
     return _pageIndex;
 }
-
+- (AImageScrollViewScaleMode)scaleMode
+{
+    return _scaleMode;
+}
 - (void)loadView
 {
     AImageScrollView *scrollView = [[AImageScrollView alloc] init];
@@ -95,8 +98,8 @@ NSString * const kAPhotoViewControllerDefaultPlaceholder = @"default-placeholder
         image = self.thumbnail;
     else
         image = self.placeHolder;
-    scrollView.scaleMode = AImageScrollViewScaleModeWidth;
-    scrollView.isAlwaysEnlarge = YES;
+    scrollView.scaleMode = _scaleMode;
+    scrollView.isAlwaysEnlarge = NO;
     scrollView.image = image;
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view = scrollView;
