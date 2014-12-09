@@ -164,7 +164,7 @@
 - (void)setMaxMinZoomScalesForCurrentBounds
 {
     CGSize boundsSize = self.bounds.size;
-                
+    
     // calculate min/max zoomscale
     CGFloat xScale = boundsSize.width  / _imageSize.width;    // the scale needed to perfectly fit the image width-wise
     CGFloat yScale = boundsSize.height / _imageSize.height;   // the scale needed to perfectly fit the image height-wise
@@ -291,13 +291,7 @@
     CGFloat zoomScale = 1.0;
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     switch (self.scaleMode) {
-        case AImageScrollViewScaleModeAuto:
-            zoomScale = self.maximumZoomScale;
-            break;
         case AImageScrollViewScaleModeHeight:
-            if(screenSize.height>screenSize.width)
-                zoomScale = self.contentSize.width/screenSize.width;
-            else
                 zoomScale = self.minimumZoomScale;
             break;
         case AImageScrollViewScaleModeWidth:
@@ -305,9 +299,6 @@
                 zoomScale = self.minimumZoomScale;
             else
                 zoomScale = self.contentSize.width/screenSize.height;
-            break;
-        case AImageScrollViewScaleModeNormal:
-            zoomScale = self.minimumZoomScale;
             break;
         default:
             zoomScale = self.minimumZoomScale;

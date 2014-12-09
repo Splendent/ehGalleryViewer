@@ -41,9 +41,7 @@ NSInteger const kEHPagePhotoNumber = 40;
     [self.navigationItem setRightBarButtonItems:@[self.backBarButton,self.indidactor]];
     [self setToolbarItems:@[[self fixedSpace],self.scaleModeBarButton,[self flexiableSpace],self.currentPageBarButton,[self flexiableSpace],self.pageSlider,[self fixedSpace]]];
     self.scaleModeToTitleDic = @{@"W":@(AImageScrollViewScaleModeWidth),
-                                 @"H":@(AImageScrollViewScaleModeHeight),
-                                 @"A":@(AImageScrollViewScaleModeAuto),
-                                 @"N":@(AImageScrollViewScaleModeNormal)
+                                 @"H":@(AImageScrollViewScaleModeHeight)
                                  };
     self.dataSource = self;
 }
@@ -272,7 +270,7 @@ NSInteger const kEHPagePhotoNumber = 40;
 }
 - (UIBarButtonItem *)scaleModeBarButton {
     if(_scaleModeBarButton == nil) {
-        _scaleModeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"N"
+        _scaleModeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"H"
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(scaleModeBarButtonClicked:)];
@@ -308,10 +306,6 @@ NSInteger const kEHPagePhotoNumber = 40;
     if ([btn.title isEqualToString:@"H"]) {
         [btn setTitle:@"W"];
     } else if ([btn.title isEqualToString:@"W"]) {
-        [btn setTitle:@"A"];
-    } else if ([btn.title isEqualToString:@"A"]) {
-        [btn setTitle:@"N"];
-    } else if ([btn.title isEqualToString:@"N"]) {
         [btn setTitle:@"H"];
     } else {
         DPLog(@"Magic scale, you must keyed something wrong");
